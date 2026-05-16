@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentDialog
+    x:Class="AirPlayReceiver.App.Views.SettingsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    DefaultButton="Primary"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick">
+    <StackPanel Spacing="16" MinWidth="380">
+        <TextBox x:Name="DeviceNameBox"/>
+        <ToggleSwitch x:Name="AudioOnlySwitch"/>
+        <TextBox x:Name="PinBox" MaxLength="4"/>
+        <ComboBox x:Name="LanguageCombo" HorizontalAlignment="Stretch">
+            <ComboBoxItem x:Name="LangAuto" Tag="auto"/>
+            <ComboBoxItem Content="Deutsch" Tag="de-DE"/>
+            <ComboBoxItem Content="English" Tag="en-US"/>
+        </ComboBox>
+        <TextBlock x:Name="LangHint"        FontSize="12" Opacity="0.7" TextWrapping="Wrap"/>
+        <TextBlock x:Name="DiscoveryHint"   FontSize="12" Opacity="0.7" TextWrapping="Wrap"/>
+    </StackPanel>
+</ContentDialog>

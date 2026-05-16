@@ -1,0 +1,39 @@
+## Build output
+bin/
+obj/
+build/
+out/
+
+## Generierte Runtime-Artefakte (von scripts/build-uxplay.ps1, build-bonjour-sdk.ps1)
+src/AirPlayReceiver.App/uxplay/
+vendor/bonjour-sdk/Bin/
+vendor/bonjour-sdk/Lib/
+
+## Icon-Designvarianten (werden via scripts/design-icons.ps1 generiert)
+Assets/source/option-*.png
+
+## VS / Rider
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## NuGet
+*.nupkg
+.nuget/
+packages/
+
+## OS / temp
+Thumbs.db
+.DS_Store
+*.log
+*.tlog
+
+## Signing — niemals einchecken
+*.pfx
+*.snk
+secrets/
+.env

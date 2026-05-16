@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="AppTitle"><value>Spieglein</value></data>
+
+  <data name="Status_Off"><value>AirPlay off</value></data>
+  <data name="Status_Ready"><value>Ready for connections</value></data>
+  <data name="Status_Streaming"><value>Active connection</value></data>
+  <data name="Status_Error"><value>Error</value></data>
+
+  <data name="Detail_Off"><value>Click "Start AirPlay" to mirror your iPhone or iPad.</value></data>
+  <data name="Detail_Ready"><value>On your iPhone/iPad, pick this PC from the Screen Mirroring menu. The picture will appear in this window.</value></data>
+  <data name="Detail_Streaming"><value>Waiting for the first video frame…</value></data>
+
+  <data name="Button_Start"><value>Start AirPlay</value></data>
+  <data name="Button_Stop"><value>Stop AirPlay</value></data>
+
+  <data name="Tooltip_Fullscreen"><value>Fullscreen (Alt+Enter)</value></data>
+  <data name="Tooltip_More"><value>More</value></data>
+  <data name="Menu_Settings"><value>Settings…</value></data>
+  <data name="Menu_Log"><value>Open log</value></data>
+  <data name="Menu_About"><value>About AirPlay Receiver</value></data>
+
+  <data name="Tray_Show"><value>Show window</value></data>
+  <data name="Tray_Quit"><value>Quit</value></data>
+
+  <data name="Settings_Title"><value>Settings</value></data>
+  <data name="Settings_Save"><value>Save</value></data>
+  <data name="Settings_Cancel"><value>Cancel</value></data>
+  <data name="Settings_DeviceName"><value>Device name</value></data>
+  <data name="Settings_DeviceName_Placeholder"><value>Name shown on your iPhone</value></data>
+  <data name="Settings_AudioOnly"><value>Audio only (no video window)</value></data>
+  <data name="Settings_AudioOnly_On"><value>On</value></data>
+  <data name="Settings_AudioOnly_Off"><value>Off</value></data>
+  <data name="Settings_Pin"><value>PIN code (4 digits, empty = off)</value></data>
+  <data name="Settings_Pin_Placeholder"><value>e.g. 1234</value></data>
+  <data name="Settings_Language"><value>Language</value></data>
+  <data name="Settings_Language_Auto"><value>Automatic (system)</value></data>
+  <data name="Settings_Language_Hint"><value>Language changes take effect after restarting the app.</value></data>
+  <data name="Settings_Discovery_Hint"><value>Note: After renaming, it can take 1–2 minutes until your iPhone shows the new name (iOS caches the device list).</value></data>
+
+  <data name="Restart_Question"><value>The language change takes effect after restarting the app. Restart now?</value></data>
+  <data name="Restart_Yes"><value>Restart</value></data>
+  <data name="Restart_No"><value>Later</value></data>
+
+  <data name="Log_Copy"><value>Copy to clipboard</value></data>
+  <data name="Log_OpenFolder"><value>Open folder</value></data>
+
+  <data name="About_Body"><value>Spieglein — free receiver to mirror your iPhone, iPad or Mac to Windows. (German for "little mirror" — from the fairy-tale line "Mirror, mirror, on the wall…")&#x000A;Based on UxPlay (GPLv3) and Apple's open-source mDNSResponder (Apache-2.0).&#x000A;&#x000A;Not affiliated with Apple Inc. AirPlay is a trademark of Apple Inc.</value></data>
+  <data name="About_SourceLabel"><value>Source code:</value></data>
+  <data name="About_Ok"><value>OK</value></data>
+
+</root>
