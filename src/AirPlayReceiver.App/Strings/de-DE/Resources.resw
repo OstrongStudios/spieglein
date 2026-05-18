@@ -13,8 +13,13 @@
   <data name="Status_Error"><value>Fehler</value></data>
 
   <data name="Detail_Off"><value>Klicke auf „AirPlay starten", um dein iPhone/iPad zu spiegeln.</value></data>
-  <data name="Detail_Ready"><value>Wähle auf deinem iPhone/iPad in der Bildschirmsynchronisierung diesen PC aus. Das Bild erscheint hier im Fenster.</value></data>
+  <data name="Detail_Off_LastDevice"><value>Letzte Verbindung: {0}</value></data>
+  <data name="Detail_Ready"><value>So verbindest du dein iPhone oder iPad:
+1. Kontrollzentrum öffnen (Wischen aus oberer rechter Ecke)
+2. Tippe auf das Doppelfenster-Symbol „Bildschirmsynchronisierung"
+3. Wähle „{0}" aus der Liste</value></data>
   <data name="Detail_Streaming"><value>Warte auf das erste Videobild …</value></data>
+  <data name="Detail_Streaming_With"><value>Verbunden mit {0}</value></data>
 
   <data name="Button_Start"><value>AirPlay starten</value></data>
   <data name="Button_Stop"><value>AirPlay stoppen</value></data>
@@ -52,6 +57,7 @@
 
   <data name="About_Body"><value>Spieglein — kostenloser Empfänger zum Spiegeln deines iPhones, iPads oder Macs auf Windows. „Spieglein, Spieglein an der Wand …"&#x000A;Basiert auf UxPlay (GPLv3) und Apples Open-Source-mDNSResponder (Apache-2.0).&#x000A;&#x000A;Nicht von Apple Inc. AirPlay ist eine Marke von Apple Inc.</value></data>
   <data name="About_SourceLabel"><value>Quellcode:</value></data>
+  <data name="About_VersionLabel"><value>Version</value></data>
   <data name="About_Ok"><value>OK</value></data>
 
 </root>

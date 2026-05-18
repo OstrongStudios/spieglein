@@ -33,6 +33,10 @@ public sealed class UxPlayController : IDisposable
     public string? LastError { get; private set; }
     public string LogPath => _logPath;
     public int? UxPlayProcessId => (_process is { HasExited: false }) ? _process.Id : (int?)null;
+    /// <summary>Name des aktuell verbundenen iOS-Geraets (z. B. "iPhone von Mathias"). Null wenn keiner.</summary>
+    public string? ConnectedDevice { get; private set; }
+    /// <summary>Wird gefeuert, sobald ein neuer Geraete-Name aus dem uxplay-Output geparst wurde.</summary>
+    public event EventHandler<string>? DeviceConnected;
 
     public event EventHandler<UxPlayState>? StateChanged;
 
@@ -200,6 +204,10 @@ public sealed class UxPlayController : IDisposable
         }
     }
 
+    // "connection request from iPhone von Mathias (iPhone14,5) with deviceID = ..."
+    private static readonly System.Text.RegularExpressions.Regex _deviceRegex =
+        new(@"connection request from (.+?) \(", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
     private void HandleOutput(string? line, bool isErr)
     {
         if (string.IsNullOrEmpty(line)) return;
@@ -212,9 +220,19 @@ public sealed class UxPlayController : IDisposable
         }
 
         if (line.Contains("Connection request from", StringComparison.OrdinalIgnoreCase))
+        {
+            var match = _deviceRegex.Match(line);
+            if (match.Success)
+            {
+                ConnectedDevice = match.Groups[1].Value.Trim();
+                DeviceConnected?.Invoke(this, ConnectedDevice);
+            }
             SetState(UxPlayState.Streaming);
+        }
         else if (line.Contains("connection closed", StringComparison.OrdinalIgnoreCase))
+        {
             SetState(UxPlayState.Ready);
+        }
     }
 
     private void OnExited(object? sender, EventArgs e)

@@ -13,8 +13,13 @@
   <data name="Status_Error"><value>Error</value></data>
 
   <data name="Detail_Off"><value>Click "Start AirPlay" to mirror your iPhone or iPad.</value></data>
-  <data name="Detail_Ready"><value>On your iPhone/iPad, pick this PC from the Screen Mirroring menu. The picture will appear in this window.</value></data>
+  <data name="Detail_Off_LastDevice"><value>Last connection: {0}</value></data>
+  <data name="Detail_Ready"><value>How to connect your iPhone or iPad:
+1. Open Control Center (swipe down from top-right)
+2. Tap the double-window icon "Screen Mirroring"
+3. Select "{0}" from the list</value></data>
   <data name="Detail_Streaming"><value>Waiting for the first video frame…</value></data>
+  <data name="Detail_Streaming_With"><value>Connected to {0}</value></data>
 
   <data name="Button_Start"><value>Start AirPlay</value></data>
   <data name="Button_Stop"><value>Stop AirPlay</value></data>
@@ -52,6 +57,7 @@
 
   <data name="About_Body"><value>Spieglein — free receiver to mirror your iPhone, iPad or Mac to Windows. (German for "little mirror" — from the fairy-tale line "Mirror, mirror, on the wall…")&#x000A;Based on UxPlay (GPLv3) and Apple's open-source mDNSResponder (Apache-2.0).&#x000A;&#x000A;Not affiliated with Apple Inc. AirPlay is a trademark of Apple Inc.</value></data>
   <data name="About_SourceLabel"><value>Source code:</value></data>
+  <data name="About_VersionLabel"><value>Version</value></data>
   <data name="About_Ok"><value>OK</value></data>
 
 </root>

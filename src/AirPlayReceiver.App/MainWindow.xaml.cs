@@ -33,12 +33,17 @@ public sealed partial class MainWindow : Window
 
         var uxplayPath = Path.Combine(AppContext.BaseDirectory, "uxplay", "uxplay.exe");
         _controller = new UxPlayController(uxplayPath) { Settings = _settings };
-        _controller.StateChanged += OnStateChanged;
+        _controller.StateChanged    += OnStateChanged;
+        _controller.DeviceConnected += OnDeviceConnected;
         _watchdog = new PowerWatchdog(_controller);
 
         var appHwnd = WindowNative.GetWindowHandle(this);
         var windowId = Win32Interop.GetWindowIdFromWindow(appHwnd);
         _appWindow = AppWindow.GetFromWindowId(windowId);
+
+        // Spieglein-Icon in der Titelleiste setzen (Win32-Fensterklassen-Icon).
+        var titleIconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "AppIcon.ico");
+        if (File.Exists(titleIconPath)) _appWindow.SetIcon(titleIconPath);
 
         _embedder = new VideoEmbedder(appHwnd, DispatcherQueue);
         _embedder.EmbeddedChanged += (_, _) =>
@@ -264,6 +269,9 @@ public sealed partial class MainWindow : Window
         content.Inlines.Add(new Microsoft.UI.Xaml.Documents.LineBreak());
         content.Inlines.Add(new Microsoft.UI.Xaml.Documents.LineBreak());
         content.Inlines.Add(new Microsoft.UI.Xaml.Documents.Run
+            { Text = $"{_strings.GetString("About_VersionLabel")} {GetAppVersion()}" });
+        content.Inlines.Add(new Microsoft.UI.Xaml.Documents.LineBreak());
+        content.Inlines.Add(new Microsoft.UI.Xaml.Documents.Run
             { Text = _strings.GetString("About_SourceLabel") + " " });
         var link = new Microsoft.UI.Xaml.Documents.Hyperlink
             { NavigateUri = new Uri("https://github.com/OstrongStudios/spieglein") };
@@ -317,36 +325,69 @@ public sealed partial class MainWindow : Window
     private void OnStateChanged(object? sender, UxPlayState state)
         => DispatcherQueue.TryEnqueue(() => UpdateUi(state));
 
+    private void OnDeviceConnected(object? sender, string deviceName)
+        => DispatcherQueue.TryEnqueue(() =>
+        {
+            _settings.LastConnectedDevice = deviceName;
+            _settings.Save();
+            // Falls wir schon im Streaming-State sind, Detail-Text aktualisieren.
+            if (_controller.State == UxPlayState.Streaming)
+                DetailText.Text = string.Format(_strings.GetString("Detail_Streaming_With"), deviceName);
+        });
+
     private void UpdateUi(UxPlayState state)
     {
+        // Button bleibt im AccentButtonStyle (kein Background-Override) — sonst gerät
+        // das Template in einen Visual-State-Mismatch, in dem Klicks nicht mehr durchgehen.
         switch (state)
         {
             case UxPlayState.Stopped:
                 StatusIndicator.Fill = Brush(Colors.Gray);
-                StatusText.Text = _strings.GetString("Status_Off");
+                StatusText.Text       = _strings.GetString("Status_Off");
                 ToggleButtonText.Text = _strings.GetString("Button_Start");
-                DetailText.Text = _strings.GetString("Detail_Off");
+                DetailText.Text       = !string.IsNullOrWhiteSpace(_settings.LastConnectedDevice)
+                    ? string.Format(_strings.GetString("Detail_Off_LastDevice"), _settings.LastConnectedDevice)
+                    : _strings.GetString("Detail_Off");
                 _embedder.Stop();
                 break;
+
             case UxPlayState.Ready:
                 StatusIndicator.Fill = Brush(Colors.SeaGreen);
-                StatusText.Text = _strings.GetString("Status_Ready");
+                StatusText.Text       = _strings.GetString("Status_Ready");
                 ToggleButtonText.Text = _strings.GetString("Button_Stop");
-                DetailText.Text = _strings.GetString("Detail_Ready");
+                DetailText.Text       = string.Format(_strings.GetString("Detail_Ready"), _settings.DeviceName);
                 break;
+
             case UxPlayState.Streaming:
                 StatusIndicator.Fill = Brush(Colors.DodgerBlue);
-                StatusText.Text = _strings.GetString("Status_Streaming");
+                StatusText.Text       = _strings.GetString("Status_Streaming");
                 ToggleButtonText.Text = _strings.GetString("Button_Stop");
-                DetailText.Text = _strings.GetString("Detail_Streaming");
+                DetailText.Text       = !string.IsNullOrWhiteSpace(_controller.ConnectedDevice)
+                    ? string.Format(_strings.GetString("Detail_Streaming_With"), _controller.ConnectedDevice)
+                    : _strings.GetString("Detail_Streaming");
                 break;
+
             case UxPlayState.Error:
                 StatusIndicator.Fill = Brush(Colors.Crimson);
-                StatusText.Text = _strings.GetString("Status_Error");
+                StatusText.Text       = _strings.GetString("Status_Error");
                 ToggleButtonText.Text = _strings.GetString("Button_Start");
-                DetailText.Text = _controller.LastError ?? string.Empty;
+                DetailText.Text       = _controller.LastError ?? string.Empty;
                 _embedder.Stop();
                 break;
+        }
+    }
+
+    private static string GetAppVersion()
+    {
+        try
+        {
+            var v = Windows.ApplicationModel.Package.Current.Id.Version;
+            return $"{v.Major}.{v.Minor}.{v.Build}.{v.Revision}";
+        }
+        catch
+        {
+            var asm = typeof(MainWindow).Assembly.GetName().Version;
+            return asm?.ToString() ?? "?";
         }
     }
 

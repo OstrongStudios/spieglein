@@ -12,6 +12,8 @@ public sealed class AppSettings
     public bool AudioOnly { get; set; }
     /// <summary>"auto", "de-DE" oder "en-US".</summary>
     public string Language { get; set; } = "auto";
+    /// <summary>Letzter erfolgreich verbundener Client (z. B. "iPhone von Mathias").</summary>
+    public string? LastConnectedDevice { get; set; }
 
     [JsonIgnore]
     public static string FilePath { get; } = Path.Combine(
