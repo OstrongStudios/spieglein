@@ -42,8 +42,14 @@ public sealed partial class MainWindow : Window
         _appWindow = AppWindow.GetFromWindowId(windowId);
 
         // Spieglein-Icon in der Titelleiste setzen (Win32-Fensterklassen-Icon).
-        var titleIconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "AppIcon.ico");
-        if (File.Exists(titleIconPath)) _appWindow.SetIcon(titleIconPath);
+        // Auf manchen Win10-Builds (22H2 + alter Hardware) kann SetIcon zicken — daher
+        // weich umschliessen, im Worst-Case bleibt halt das Default-Icon.
+        try
+        {
+            var titleIconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "AppIcon.ico");
+            if (File.Exists(titleIconPath)) _appWindow.SetIcon(titleIconPath);
+        }
+        catch { /* ignore, Default-Icon ist okay */ }
 
         _embedder = new VideoEmbedder(appHwnd, DispatcherQueue);
         _embedder.EmbeddedChanged += (_, _) =>

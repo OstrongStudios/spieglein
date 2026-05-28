@@ -15,9 +15,14 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $pfxPath  = Join-Path $repoRoot 'dev-cert.pfx'
-$msix     = Join-Path $repoRoot 'src\AirPlayReceiver.App\bin\x64\Release\net8.0-windows10.0.19041.0\win-x64\AppPackages\AirPlayReceiver.App_1.0.0.0_Test\AirPlayReceiver.App_1.0.0.0_x64.msix'
+$pkgRoot  = Join-Path $repoRoot 'src\AirPlayReceiver.App\bin\x64\Release\net8.0-windows10.0.19041.0\win-x64\AppPackages'
 
-if (-not (Test-Path $msix)) { throw "MSIX nicht gefunden: $msix. Erst build-msix.ps1 ausfuehren." }
+# Neueste .msix aus AppPackages automatisch finden.
+$msix = Get-ChildItem $pkgRoot -Recurse -Filter 'AirPlayReceiver.App_*_x64.msix' -ErrorAction SilentlyContinue |
+        Sort-Object LastWriteTime -Descending |
+        Select-Object -First 1 -ExpandProperty FullName
+if (-not $msix) { throw "Kein MSIX in $pkgRoot gefunden. Erst build-msix.ps1 ausfuehren." }
+Write-Host ">>> Signiere & installiere: $msix" -ForegroundColor DarkGray
 
 # 1. Cert generieren oder existierendes wiederverwenden
 $existing = Get-ChildItem Cert:\CurrentUser\My | Where-Object { $_.Subject -eq $Subject } | Select-Object -First 1

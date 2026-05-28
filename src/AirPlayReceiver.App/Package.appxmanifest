@@ -8,12 +8,12 @@
     <Identity
         Name="4663Ostronggames.Spieglein"
         Publisher="CN=654B9AD8-3E71-4D00-B420-E162C13CD666"
-        Version="1.0.1.0"
+        Version="1.0.3.0"
         ProcessorArchitecture="x64" />
 
     <Properties>
         <DisplayName>Spieglein</DisplayName>
-        <PublisherDisplayName>Ostronggames</PublisherDisplayName>
+        <PublisherDisplayName>Ostrong Studios</PublisherDisplayName>
         <Logo>Assets\StoreLogo.png</Logo>
     </Properties>
 

@@ -46,6 +46,17 @@ collect_deps "$UXPLAY_DIR/uxplay.exe"
 echo ">>> Kopiere GStreamer-Plugins (nur .dll, keine Header/pkgconfig)..."
 find "$MINGW_GST_PLUGINS" -maxdepth 1 -name '*.dll' -exec cp -n {} "$GST_PLUGIN_DIR/" \;
 
+# Deny-List: Plugins, die nicht fuer AirPlay-Empfang noetig sind und Deps brauchen,
+# die wir nicht bundlen. libgstcodec2json benoetigt z. B. libjson-glib-1.0-0.dll, das
+# auf Windows-10-22H2-Edge-Cases den Prozess crasht (STATUS_INVALID_IMAGE_FORMAT).
+DENY_LIST=(libgstcodec2json.dll)
+for f in "${DENY_LIST[@]}"; do
+  if [ -f "$GST_PLUGIN_DIR/$f" ]; then
+    rm "$GST_PLUGIN_DIR/$f"
+    echo "  (entfernt: $f)"
+  fi
+done
+
 # Plugins haben selbst DLL-Deps. ldd auf jedes Plugin, transitive Deps in UXPLAY_DIR.
 echo ">>> Sammele Plugin-Deps..."
 for plugin in "$GST_PLUGIN_DIR"/*.dll; do

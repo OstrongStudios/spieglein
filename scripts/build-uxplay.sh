@@ -36,7 +36,11 @@ if [ -n "${BONJOUR_SDK_HOME:-}" ]; then
   echo "    BONJOUR_SDK_HOME=$BONJOUR_SDK_HOME"
 fi
 
-cmake -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release ..
+# -DNO_MARCH_NATIVE=ON: KRITISCH — sonst kompiliert GCC mit -march=native auf
+# Build-Host-CPU-Instruktionen (AVX2 etc.), die aelter CPUs (z. B. Ivy Bridge 2012)
+# nicht koennen. Fuehrt zu STATUS_ILLEGAL_INSTRUCTION (0xC000001D) Crashes auf
+# Win10 22H2 mit Hardware vor ~2013.
+cmake -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release -DNO_MARCH_NATIVE=ON ..
 
 echo ">>> Build (-j$(nproc))"
 make -j"$(nproc)"
