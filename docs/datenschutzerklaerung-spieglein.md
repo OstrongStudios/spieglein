@@ -1,6 +1,6 @@
 # Datenschutzerklärung für die Anwendung „Spieglein"
 
-*Stand: 17. Mai 2026*
+*Stand: 30. Mai 2026 (gültig ab Version 1.0.3.0)*
 
 ## 1. Verantwortlicher
 
@@ -25,10 +25,11 @@ Bei der Nutzung von Spieglein werden folgende Daten verarbeitet, **ausschließli
 
 | Datenart | Speicherort | Zweck |
 |----------|-------------|-------|
-| Konfiguration (Gerätename, optionaler PIN-Code, Sprache, Audio-Modus) | `%LOCALAPPDATA%\Packages\…Spieglein…\LocalCache\Local\AirPlayReceiver\settings.json` | Wiederherstellung Ihrer Einstellungen beim nächsten Programmstart |
+| Konfiguration (Gerätename, optionaler PIN-Code, Sprache, Audio-Modus, letzte Verbindung) | `%LOCALAPPDATA%\Packages\…Spieglein…\LocalCache\Local\AirPlayReceiver\settings.json` | Wiederherstellung Ihrer Einstellungen beim nächsten Programmstart |
 | Diagnose-Log (technische Meldungen der internen Komponenten) | `%LOCALAPPDATA%\Packages\…Spieglein…\LocalCache\Local\AirPlayReceiver\uxplay.log` | Fehlersuche; nur lokal sichtbar |
+| Crash-Log (Stack-Traces bei unerwarteten Programmabbrüchen, ab Version 1.0.3.0) | `%LOCALAPPDATA%\Packages\…Spieglein…\LocalCache\Local\AirPlayReceiver\crash.log` | Fehlersuche; nur lokal sichtbar, wird nicht automatisch versendet |
 | Audio-/Video-Stream-Daten vom verbundenen Apple-Gerät | flüchtig im Arbeitsspeicher | Wiedergabe der AirPlay-Übertragung |
-| Hostnamen / Gerätekennungen verbundener Apple-Geräte | flüchtig im Arbeitsspeicher | Anzeige des Verbindungsnamens während aktiver Sitzung |
+| Hostnamen / Gerätekennungen verbundener Apple-Geräte | flüchtig im Arbeitsspeicher + lokal in settings.json (Name der zuletzt verbundenen Geräts) | Anzeige des Verbindungsnamens während aktiver Sitzung und im Idle-Zustand |
 
 **Keine dieser Daten verlassen Ihren PC.** Es findet keine Übermittlung an Ostrong Studios, Apple Inc., Microsoft Corporation oder Dritte statt.
 
@@ -89,7 +90,10 @@ Web: https://www.dsb.gv.at
 
 ## 10. Stand und Änderungen
 
-Diese Datenschutzerklärung ist gültig ab dem **17. Mai 2026**. Bei Anpassungen der Anwendung oder bei Änderungen gesetzlicher Vorgaben behalten wir uns vor, diese Erklärung anzupassen. Die jeweils aktuelle Fassung ist unter https://ostrongstudios.de/datenschutzerklaerung/ einsehbar.
+Diese Datenschutzerklärung ist gültig ab dem **30. Mai 2026** (Version 1.0.3.0). Bei Anpassungen der Anwendung oder bei Änderungen gesetzlicher Vorgaben behalten wir uns vor, diese Erklärung anzupassen. Die jeweils aktuelle Fassung ist unter https://ostrongstudios.de/datenschutzerklaerung/ einsehbar.
+
+**Vorgängerversionen:**
+- 17. Mai 2026 (initial, Versionen 1.0.0.0 bis 1.0.1.0)
 
 ---
 
