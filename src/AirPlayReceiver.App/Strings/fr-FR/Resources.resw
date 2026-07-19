@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="AppTitle"><value>Spieglein</value></data>
+
+  <data name="Status_Off"><value>AirPlay désactivé</value></data>
+  <data name="Status_Ready"><value>Prêt à recevoir</value></data>
+  <data name="Status_Streaming"><value>Connexion active</value></data>
+  <data name="Status_Error"><value>Erreur</value></data>
+
+  <data name="Detail_Off"><value>Cliquez sur « Activer AirPlay » pour recopier l’écran de votre iPhone ou iPad.</value></data>
+  <data name="Detail_Off_LastDevice"><value>Dernière connexion : {0}</value></data>
+  <data name="Detail_Ready"><value>Comment connecter votre iPhone ou iPad :
+1. Ouvrez le centre de contrôle (balayez vers le bas depuis le coin supérieur droit)
+2. Touchez « Recopie de l’écran »
+3. Sélectionnez « {0} » dans la liste</value></data>
+  <data name="Detail_Streaming"><value>En attente de la première image…</value></data>
+  <data name="Detail_Streaming_With"><value>Connecté à {0}</value></data>
+
+  <data name="Button_Start"><value>Activer AirPlay</value></data>
+  <data name="Button_Stop"><value>Désactiver AirPlay</value></data>
+
+  <data name="Tooltip_Fullscreen"><value>Plein écran (Alt+Entrée)</value></data>
+  <data name="Tooltip_More"><value>Plus</value></data>
+  <data name="Menu_Settings"><value>Réglages…</value></data>
+  <data name="Menu_Log"><value>Afficher le journal</value></data>
+  <data name="Menu_Coffee"><value>Offrez-moi un café</value></data>
+  <data name="Menu_About"><value>À propos de Spieglein</value></data>
+
+  <data name="Tray_Show"><value>Afficher la fenêtre</value></data>
+  <data name="Tray_Quit"><value>Quitter</value></data>
+
+  <data name="Settings_Title"><value>Réglages</value></data>
+  <data name="Settings_Save"><value>Enregistrer</value></data>
+  <data name="Settings_Cancel"><value>Annuler</value></data>
+  <data name="Settings_DeviceName"><value>Nom de l’ordinateur</value></data>
+  <data name="Settings_DeviceName_Placeholder"><value>Nom affiché sur l’iPhone</value></data>
+  <data name="Settings_AudioOnly"><value>Audio seul (sans fenêtre vidéo)</value></data>
+  <data name="Settings_AudioOnly_On"><value>Oui</value></data>
+  <data name="Settings_AudioOnly_Off"><value>Non</value></data>
+  <data name="Settings_Pin"><value>Code PIN (4 chiffres, vide = désactivé)</value></data>
+  <data name="Settings_Pin_Placeholder"><value>ex. 1234</value></data>
+  <data name="Settings_Language"><value>Langue</value></data>
+  <data name="Settings_Language_Auto"><value>Automatique (système)</value></data>
+  <data name="Settings_Language_Hint"><value>Le changement de langue prend effet au redémarrage de l’application.</value></data>
+  <data name="Settings_Discovery_Hint"><value>Remarque : après un changement de nom, votre iPhone peut mettre 1 à 2 minutes à l’afficher, car iOS met la liste des appareils en cache.</value></data>
+
+  <data name="Restart_Question"><value>Le changement de langue prend effet au redémarrage de l’application. Redémarrer maintenant ?</value></data>
+  <data name="Restart_Yes"><value>Redémarrer</value></data>
+  <data name="Restart_No"><value>Plus tard</value></data>
+
+  <data name="Log_Copy"><value>Copier dans le presse-papiers</value></data>
+  <data name="Log_OpenFolder"><value>Ouvrir le dossier</value></data>
+
+  <data name="About_Body"><value>Spieglein — récepteur gratuit pour recopier l’écran de votre iPhone, iPad ou Mac sur Windows. Le nom est allemand et signifie « petit miroir », d’après le conte : « Miroir, mon beau miroir, qui est la plus belle ? »&#x000A;Basé sur UxPlay (GPLv3) et sur mDNSResponder d’Apple, en open source (Apache 2.0).&#x000A;&#x000A;Sans lien avec Apple Inc. AirPlay est une marque déposée d’Apple Inc.</value></data>
+  <data name="About_SourceLabel"><value>Code source :</value></data>
+  <data name="About_VersionLabel"><value>Version</value></data>
+  <data name="About_Ok"><value>OK</value></data>
+
+</root>

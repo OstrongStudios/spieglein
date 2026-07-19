@@ -9,11 +9,9 @@
         <TextBox x:Name="DeviceNameBox"/>
         <ToggleSwitch x:Name="AudioOnlySwitch"/>
         <TextBox x:Name="PinBox" MaxLength="4"/>
-        <ComboBox x:Name="LanguageCombo" HorizontalAlignment="Stretch">
-            <ComboBoxItem x:Name="LangAuto" Tag="auto"/>
-            <ComboBoxItem Content="Deutsch" Tag="de-DE"/>
-            <ComboBoxItem Content="English" Tag="en-US"/>
-        </ComboBox>
+        <!-- Eintraege werden im Code-Behind aus den vorhandenen Strings/<locale>/-
+             Ordnern befuellt, damit neue Sprachen ohne XAML-Aenderung auftauchen. -->
+        <ComboBox x:Name="LanguageCombo" HorizontalAlignment="Stretch"/>
         <TextBlock x:Name="LangHint"        FontSize="12" Opacity="0.7" TextWrapping="Wrap"/>
         <TextBlock x:Name="DiscoveryHint"   FontSize="12" Opacity="0.7" TextWrapping="Wrap"/>
     </StackPanel>

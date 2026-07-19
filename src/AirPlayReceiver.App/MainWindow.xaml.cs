@@ -128,6 +128,7 @@ public sealed partial class MainWindow : Window
         ToolTipService.SetToolTip(MoreButton,        _strings.GetString("Tooltip_More"));
         MenuSettings.Text = _strings.GetString("Menu_Settings");
         MenuLog.Text      = _strings.GetString("Menu_Log");
+        MenuCoffee.Text   = _strings.GetString("Menu_Coffee");
         MenuAbout.Text    = _strings.GetString("Menu_About");
     }
 
@@ -201,6 +202,21 @@ public sealed partial class MainWindow : Window
         catch { return; }
         _quitRequested = true;
         this.Close();
+    }
+
+    private void MenuCoffee_Click(object sender, RoutedEventArgs e)
+    {
+        // Freiwillige Spende ueber die eigene Domain (leitet auf Buy Me a Coffee weiter).
+        // Oeffnet den Standardbrowser; kein In-App-Kauf, daher Store-konform.
+        try
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName        = "https://www.ostrongstudios.de/kaffee",
+                UseShellExecute = true,
+            });
+        }
+        catch { /* kein Browser verfuegbar — dann passiert eben nichts */ }
     }
 
     private async void MenuLog_Click(object sender, RoutedEventArgs e)

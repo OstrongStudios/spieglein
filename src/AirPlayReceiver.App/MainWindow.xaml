@@ -60,6 +60,11 @@
                             <MenuFlyoutItem.Icon><SymbolIcon Symbol="Document"/></MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutSeparator/>
+                        <MenuFlyoutItem x:Name="MenuCoffee" Text="Kaffee spendieren" Click="MenuCoffee_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon FontFamily="Segoe UI Emoji" Glyph="&#x2615;"/>
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
                         <MenuFlyoutItem x:Name="MenuAbout" Text="Über AirPlay-Empfänger" Click="MenuAbout_Click"/>
                     </MenuFlyout>
                 </Button.Flyout>

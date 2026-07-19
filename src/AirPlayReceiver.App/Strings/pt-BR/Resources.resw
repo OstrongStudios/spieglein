@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="AppTitle"><value>Spieglein</value></data>
+
+  <data name="Status_Off"><value>AirPlay desativado</value></data>
+  <data name="Status_Ready"><value>Pronto para conectar</value></data>
+  <data name="Status_Streaming"><value>Conexão ativa</value></data>
+  <data name="Status_Error"><value>Erro</value></data>
+
+  <data name="Detail_Off"><value>Clique em “Ativar AirPlay” para espelhar a tela do seu iPhone ou iPad.</value></data>
+  <data name="Detail_Off_LastDevice"><value>Última conexão: {0}</value></data>
+  <data name="Detail_Ready"><value>Como conectar seu iPhone ou iPad:
+1. Abra a central de controle (deslize para baixo a partir do canto superior direito)
+2. Toque em “Espelhamento de Tela”
+3. Escolha “{0}” na lista</value></data>
+  <data name="Detail_Streaming"><value>Aguardando a primeira imagem…</value></data>
+  <data name="Detail_Streaming_With"><value>Conectado a {0}</value></data>
+
+  <data name="Button_Start"><value>Ativar AirPlay</value></data>
+  <data name="Button_Stop"><value>Desativar AirPlay</value></data>
+
+  <data name="Tooltip_Fullscreen"><value>Tela cheia (Alt+Enter)</value></data>
+  <data name="Tooltip_More"><value>Mais</value></data>
+  <data name="Menu_Settings"><value>Ajustes…</value></data>
+  <data name="Menu_Log"><value>Ver registro</value></data>
+  <data name="Menu_Coffee"><value>Pague-me um café</value></data>
+  <data name="Menu_About"><value>Sobre o Spieglein</value></data>
+
+  <data name="Tray_Show"><value>Mostrar janela</value></data>
+  <data name="Tray_Quit"><value>Sair</value></data>
+
+  <data name="Settings_Title"><value>Ajustes</value></data>
+  <data name="Settings_Save"><value>Salvar</value></data>
+  <data name="Settings_Cancel"><value>Cancelar</value></data>
+  <data name="Settings_DeviceName"><value>Nome do computador</value></data>
+  <data name="Settings_DeviceName_Placeholder"><value>Nome que aparece no iPhone</value></data>
+  <data name="Settings_AudioOnly"><value>Somente áudio (sem janela de vídeo)</value></data>
+  <data name="Settings_AudioOnly_On"><value>Sim</value></data>
+  <data name="Settings_AudioOnly_Off"><value>Não</value></data>
+  <data name="Settings_Pin"><value>Código PIN (4 dígitos, vazio = desativado)</value></data>
+  <data name="Settings_Pin_Placeholder"><value>ex.: 1234</value></data>
+  <data name="Settings_Language"><value>Idioma</value></data>
+  <data name="Settings_Language_Auto"><value>Automático (sistema)</value></data>
+  <data name="Settings_Language_Hint"><value>A mudança de idioma só é aplicada ao reiniciar o aplicativo.</value></data>
+  <data name="Settings_Discovery_Hint"><value>Observação: depois de mudar o nome, o iPhone pode levar de 1 a 2 minutos para exibi-lo, porque o iOS mantém a lista de dispositivos em cache.</value></data>
+
+  <data name="Restart_Question"><value>A mudança de idioma só é aplicada ao reiniciar o aplicativo. Reiniciar agora?</value></data>
+  <data name="Restart_Yes"><value>Reiniciar</value></data>
+  <data name="Restart_No"><value>Depois</value></data>
+
+  <data name="Log_Copy"><value>Copiar para a área de transferência</value></data>
+  <data name="Log_OpenFolder"><value>Abrir pasta</value></data>
+
+  <data name="About_Body"><value>Spieglein — receptor gratuito para espelhar a tela do seu iPhone, iPad ou Mac no Windows. O nome é alemão e significa “espelhinho”, do conto: “Espelho, espelho meu, existe alguém mais bela do que eu?”&#x000A;Baseado no UxPlay (GPLv3) e no mDNSResponder da Apple, de código aberto (Apache 2.0).&#x000A;&#x000A;Sem vínculo com a Apple Inc. AirPlay é uma marca registrada da Apple Inc.</value></data>
+  <data name="About_SourceLabel"><value>Código-fonte:</value></data>
+  <data name="About_VersionLabel"><value>Versão</value></data>
+  <data name="About_Ok"><value>OK</value></data>
+
+</root>

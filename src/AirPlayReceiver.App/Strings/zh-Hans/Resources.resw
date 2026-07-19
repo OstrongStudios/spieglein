@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="AppTitle"><value>Spieglein</value></data>
+
+  <data name="Status_Off"><value>AirPlay 已关闭</value></data>
+  <data name="Status_Ready"><value>等待连接</value></data>
+  <data name="Status_Streaming"><value>已连接</value></data>
+  <data name="Status_Error"><value>出错</value></data>
+
+  <data name="Detail_Off"><value>点击“启动 AirPlay”，即可镜像 iPhone 或 iPad 的屏幕。</value></data>
+  <data name="Detail_Off_LastDevice"><value>上次连接：{0}</value></data>
+  <data name="Detail_Ready"><value>连接 iPhone 或 iPad 的方法：
+1. 打开控制中心（从屏幕右上角向下轻扫）
+2. 轻点“屏幕镜像”
+3. 在列表中选择“{0}”</value></data>
+  <data name="Detail_Streaming"><value>正在等待画面…</value></data>
+  <data name="Detail_Streaming_With"><value>已连接到 {0}</value></data>
+
+  <data name="Button_Start"><value>启动 AirPlay</value></data>
+  <data name="Button_Stop"><value>停止 AirPlay</value></data>
+
+  <data name="Tooltip_Fullscreen"><value>全屏（Alt+Enter）</value></data>
+  <data name="Tooltip_More"><value>更多</value></data>
+  <data name="Menu_Settings"><value>设置…</value></data>
+  <data name="Menu_Log"><value>查看日志</value></data>
+  <data name="Menu_Coffee"><value>请我喝杯咖啡</value></data>
+  <data name="Menu_About"><value>关于 Spieglein</value></data>
+
+  <data name="Tray_Show"><value>显示窗口</value></data>
+  <data name="Tray_Quit"><value>退出</value></data>
+
+  <data name="Settings_Title"><value>设置</value></data>
+  <data name="Settings_Save"><value>保存</value></data>
+  <data name="Settings_Cancel"><value>取消</value></data>
+  <data name="Settings_DeviceName"><value>设备名称</value></data>
+  <data name="Settings_DeviceName_Placeholder"><value>在 iPhone 上显示的名称</value></data>
+  <data name="Settings_AudioOnly"><value>仅音频（不显示视频窗口）</value></data>
+  <data name="Settings_AudioOnly_On"><value>开</value></data>
+  <data name="Settings_AudioOnly_Off"><value>关</value></data>
+  <data name="Settings_Pin"><value>PIN 码（4 位数字，留空则不启用）</value></data>
+  <data name="Settings_Pin_Placeholder"><value>例如 1234</value></data>
+  <data name="Settings_Language"><value>语言</value></data>
+  <data name="Settings_Language_Auto"><value>自动（跟随系统）</value></data>
+  <data name="Settings_Language_Hint"><value>语言更改将在重新启动应用后生效。</value></data>
+  <data name="Settings_Discovery_Hint"><value>提示：更改名称后，iPhone 可能需要 1–2 分钟才会显示新名称，因为 iOS 会缓存设备列表。</value></data>
+
+  <data name="Restart_Question"><value>语言更改将在重新启动应用后生效。现在重新启动吗？</value></data>
+  <data name="Restart_Yes"><value>重新启动</value></data>
+  <data name="Restart_No"><value>稍后</value></data>
+
+  <data name="Log_Copy"><value>复制到剪贴板</value></data>
+  <data name="Log_OpenFolder"><value>打开文件夹</value></data>
+
+  <data name="About_Body"><value>Spieglein — 免费的接收端，可将 iPhone、iPad 或 Mac 的画面镜像到 Windows。名称取自德语，意为“小镜子”，出自童话《白雪公主》中的“魔镜魔镜，谁是世界上最美的人？”&#x000A;基于 UxPlay（GPLv3）与 Apple 的开源项目 mDNSResponder（Apache 2.0）。&#x000A;&#x000A;本应用与 Apple Inc. 无关。AirPlay 是 Apple Inc. 的商标。</value></data>
+  <data name="About_SourceLabel"><value>源代码：</value></data>
+  <data name="About_VersionLabel"><value>版本</value></data>
+  <data name="About_Ok"><value>好</value></data>
+
+</root>

@@ -28,7 +28,8 @@
   <data name="Tooltip_More"><value>Mehr</value></data>
   <data name="Menu_Settings"><value>Einstellungen…</value></data>
   <data name="Menu_Log"><value>Log öffnen</value></data>
-  <data name="Menu_About"><value>Über AirPlay-Empfänger</value></data>
+  <data name="Menu_Coffee"><value>Kaffee spendieren</value></data>
+  <data name="Menu_About"><value>Über Spieglein</value></data>
 
   <data name="Tray_Show"><value>Fenster anzeigen</value></data>
   <data name="Tray_Quit"><value>Beenden</value></data>

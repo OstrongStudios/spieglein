@@ -10,7 +10,10 @@ public sealed class AppSettings
     public string DeviceName { get; set; } = Environment.MachineName;
     public string? Pin { get; set; }
     public bool AudioOnly { get; set; }
-    /// <summary>"auto", "de-DE" oder "en-US".</summary>
+    /// <summary>
+    /// "auto" (Systemsprache) oder ein Locale-Code, zu dem es einen Ordner unter
+    /// Strings/ gibt (z. B. "de-DE", "zh-Hans"). Siehe <see cref="LocalizedStrings"/>.
+    /// </summary>
     public string Language { get; set; } = "auto";
     /// <summary>Letzter erfolgreich verbundener Client (z. B. "iPhone von Mathias").</summary>
     public string? LastConnectedDevice { get; set; }

@@ -28,7 +28,8 @@
   <data name="Tooltip_More"><value>More</value></data>
   <data name="Menu_Settings"><value>Settings…</value></data>
   <data name="Menu_Log"><value>Open log</value></data>
-  <data name="Menu_About"><value>About AirPlay Receiver</value></data>
+  <data name="Menu_Coffee"><value>Buy me a coffee</value></data>
+  <data name="Menu_About"><value>About Spieglein</value></data>
 
   <data name="Tray_Show"><value>Show window</value></data>
   <data name="Tray_Quit"><value>Quit</value></data>

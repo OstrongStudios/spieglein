@@ -15,7 +15,7 @@
 - **Anzeige des verbundenen Geräts** während des Streams + „Letzte Verbindung"-Hinweis
 - **Tray-Icon** mit Schnellzugriff, App-Beenden über Tray
 - **Sleep-/Wake-Watchdog** — verbindet nach PC-Standby automatisch wieder
-- **Mehrsprachig** (Deutsch / Englisch)
+- **Mehrsprachig** — Deutsch, Englisch, Spanisch, Französisch, Portugiesisch, Chinesisch (vereinfacht)
 - **Lokal-only** — keine Cloud, kein Tracking, keine Telemetrie
 
 ## Systemvoraussetzungen
@@ -41,6 +41,18 @@ Spieglein bündelt im MSIX-Paket:
 | **WinUI 3** (.NET 8) | MIT | Native Windows-UI |
 
 Die WinUI-App startet UxPlay und mDNSResponder als Hintergrund-Kindprozesse und reparented das von GStreamer erzeugte Videofenster in den Content-Bereich (Win32-`SetParent`).
+
+## Übersetzungen beisteuern
+
+Die Oberflächentexte liegen als `.resw`-XML unter `src/AirPlayReceiver.App/Strings/<locale>/Resources.resw` — rund 45 kurze Strings. Eine neue Sprache hinzuzufügen erfordert **keine Code-Änderung**:
+
+1. `Strings/en-US/Resources.resw` in einen neuen Ordner kopieren, z. B. `Strings/it-IT/`
+2. Die `<value>`-Inhalte übersetzen (Schlüssel unverändert lassen)
+3. Im `Package.appxmanifest` eine Zeile ergänzen: `<Resource Language="it-IT" />`
+
+Die App findet die Sprache beim Start von selbst und zeigt sie in der Sprachauswahl unter ihrem nativen Namen an. Fällt eine Systemsprache aus dem Raster, greift die Kette *exakte Sprache → Sprachfamilie (`fr-CA` findet `fr-FR`) → Englisch*.
+
+Bei der Verbindungsanleitung bitte auf die **offizielle iOS-Terminologie der Zielsprache** achten — z. B. heißt „Bildschirmsynchronisierung" auf Spanisch *Duplicar pantalla*, auf Französisch *Recopie de l'écran*. Wörtliche Übersetzungen führen Nutzer sonst zu Menüpunkten, die es auf ihrem iPhone nicht gibt.
 
 ## Build aus Quelle
 
