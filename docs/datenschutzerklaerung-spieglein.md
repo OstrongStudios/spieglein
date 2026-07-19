@@ -1,6 +1,6 @@
 # Datenschutzerklärung für die Anwendung „Spieglein"
 
-*Stand: 30. Mai 2026 (gültig ab Version 1.0.3.0)*
+*Stand: 17. Juli 2026 (gültig ab Version 1.0.4.0)*
 
 ## 1. Verantwortlicher
 
@@ -41,7 +41,23 @@ Spieglein nutzt im Betrieb ausschließlich lokale Netzwerkverbindungen:
 - AirPlay-Steuerung (TCP 7000, 7001, 7100)
 - RTP-Audio/Video (UDP 6000, 6001, 7011)
 
-Eine **Internet-Verbindung wird durch Spieglein nicht aktiv aufgebaut**. Updates der Anwendung erfolgen ausschließlich über den Microsoft-Store-Mechanismus; dafür gilt die [Datenschutzerklärung von Microsoft](https://privacy.microsoft.com/de-de/privacystatement).
+Für den Betrieb der Anwendung wird **keine Internet-Verbindung aufgebaut**. Die Anwendung sendet von sich aus keine Daten nach außen — es gibt keine Server der Ostrong Studios, mit denen sie kommuniziert. Updates erfolgen ausschließlich über den Microsoft-Store-Mechanismus; dafür gilt die [Datenschutzerklärung von Microsoft](https://privacy.microsoft.com/de-de/privacystatement).
+
+## 4a. Links zu externen Webseiten
+
+Die Anwendung enthält an zwei Stellen Verweise auf externe Webseiten. Diese werden **ausschließlich durch Ihren Klick** und **in Ihrem Standard-Browser** geöffnet — die Anwendung selbst ruft die Seiten nicht auf und übermittelt dorthin keine Daten:
+
+| Menüpunkt | Ziel | Zweck |
+|---|---|---|
+| „Kaffee spendieren" | https://www.ostrongstudios.de/kaffee | freiwillige Unterstützung; die Seite leitet weiter zum Anbieter **Buy Me a Coffee** |
+| „Über Spieglein" → Quellcode | https://github.com/OstrongStudios/spieglein | Einsicht in den Quellcode (GitHub) |
+
+Sobald Sie eine dieser Seiten aufrufen, gelten die Datenschutzbestimmungen des jeweiligen Anbieters. Dabei können — wie bei jedem Webseitenaufruf — Daten wie Ihre IP-Adresse verarbeitet werden:
+
+- **Buy Me a Coffee** (Buy Me A Coffee Inc., USA): https://www.buymeacoffee.com/privacy-policy
+- **GitHub** (GitHub Inc., USA): https://docs.github.com/site-policy/privacy-policies/github-privacy-statement
+
+Eine Spende ist ausdrücklich **freiwillig**. Die Anwendung ist ohne sie vollständig und unbefristet nutzbar; es gibt keine kostenpflichtigen Funktionen. Zahlungsdaten werden ausschließlich beim jeweiligen Zahlungsanbieter verarbeitet, nicht in der Anwendung und nicht durch uns.
 
 ## 5. Cookies, Tracking, Analyse-Tools
 
@@ -90,10 +106,15 @@ Web: https://www.dsb.gv.at
 
 ## 10. Stand und Änderungen
 
-Diese Datenschutzerklärung ist gültig ab dem **30. Mai 2026** (Version 1.0.3.0). Bei Anpassungen der Anwendung oder bei Änderungen gesetzlicher Vorgaben behalten wir uns vor, diese Erklärung anzupassen. Die jeweils aktuelle Fassung ist unter https://ostrongstudios.de/datenschutzerklaerung/ einsehbar.
+Diese Datenschutzerklärung ist gültig ab dem **17. Juli 2026** (Version 1.0.4.0). Bei Anpassungen der Anwendung oder bei Änderungen gesetzlicher Vorgaben behalten wir uns vor, diese Erklärung anzupassen. Die jeweils aktuelle Fassung ist unter https://ostrongstudios.de/datenschutzerklaerung/ einsehbar.
 
 **Vorgängerversionen:**
+- 30. Mai 2026 (Version 1.0.3.0)
 - 17. Mai 2026 (initial, Versionen 1.0.0.0 bis 1.0.1.0)
+
+**Änderungen gegenüber der Fassung vom 30. Mai 2026:**
+- Neuer Abschnitt 4a zu den beiden externen Links in der Anwendung („Kaffee spendieren", Quellcode-Link) samt Nennung der dortigen Anbieter
+- Ergänzung der Datentabelle um das Crash-Protokoll und den Namen des zuletzt verbundenen Geräts
 
 ---
 
