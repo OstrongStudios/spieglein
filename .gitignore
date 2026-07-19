@@ -32,8 +32,18 @@ Thumbs.db
 *.log
 *.tlog
 
-## Signing — niemals einchecken
+## Signing & Geheimnisse — niemals einchecken
+## (dev-cert.pfx ist nur ein selbstsigniertes Test-Zertifikat fuers lokale
+##  Sideloading. Ein echtes OV/EV-Signaturzertifikat gehoert erst recht
+##  nicht hierher — auch nicht "nur kurz".)
 *.pfx
+*.p12
 *.snk
+*.pem
+*.key
+*.keystore
+*.jks
+id_rsa*
 secrets/
 .env
+.env.*
