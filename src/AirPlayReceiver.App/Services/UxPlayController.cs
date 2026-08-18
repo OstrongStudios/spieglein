@@ -352,8 +352,10 @@ public sealed class UxPlayController : IDisposable
         ConnectedDevice = null;
         _serverReady    = false;
         Fault           = UxPlayFault.None;
-        CloseLog();
+        // Erst den Zustandswechsel protokollieren, DANN das Log schliessen —
+        // sonst fehlt ausgerechnet der letzte Eintrag einer Sitzung.
         SetState(UxPlayState.Stopped);
+        CloseLog();
     }
 
     private async Task KillAsync(Process? p)
@@ -682,6 +684,9 @@ public sealed class UxPlayController : IDisposable
             _logWriter = null;
         }
     }
+
+    /// <summary>Erlaubt anderen Komponenten (VideoEmbedder), ins selbe Log zu schreiben.</summary>
+    public void AppendLog(string line) => WriteLog(line);
 
     private void WriteLog(string line)
     {

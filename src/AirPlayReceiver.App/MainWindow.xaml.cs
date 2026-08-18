@@ -53,7 +53,7 @@ public sealed partial class MainWindow : Window
         }
         catch { /* ignore, Default-Icon ist okay */ }
 
-        _embedder = new VideoEmbedder(appHwnd, DispatcherQueue);
+        _embedder = new VideoEmbedder(appHwnd, DispatcherQueue) { Log = _controller.AppendLog };
         _embedder.EmbeddedChanged += (_, _) =>
             DispatcherQueue.TryEnqueue(() =>
             {

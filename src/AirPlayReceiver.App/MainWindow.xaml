@@ -3,7 +3,12 @@
     x:Class="AirPlayReceiver.App.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Grid x:Name="RootGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <!-- KeyboardAcceleratorPlacementMode="Hidden": WinUI blendet fuer Elemente mit
+         Tastenkuerzel automatisch einen Hinweis am Mauszeiger ein. Die Accelerators
+         haengen hier am Wurzel-Grid, das ueber dem ganzen Fenster liegt — dadurch
+         erschien das "Esc"-Schildchen ueberall und dauerhaft, auch ohne Stream. -->
+    <Grid x:Name="RootGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+          KeyboardAcceleratorPlacementMode="Hidden">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

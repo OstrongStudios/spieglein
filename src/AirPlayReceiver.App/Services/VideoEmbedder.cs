@@ -20,6 +20,9 @@ public sealed class VideoEmbedder
     private SubclassProc? _childSubclassProc;            // GC-Anchor
     private readonly IntPtr _childSubclassId = new(0x4156); // beliebig, "AV"
 
+    /// <summary>Optionale Protokollsenke; wird von MainWindow an das uxplay-Log gehaengt.</summary>
+    public Action<string>? Log { get; set; }
+
     public event EventHandler? EmbeddedChanged;
     public event EventHandler? EscapePressed;
     public event EventHandler? FullscreenTogglePressed;
@@ -100,16 +103,69 @@ public sealed class VideoEmbedder
         if (_embedded == IntPtr.Zero) return;
         if (!Native.IsWindow(_embedded)) return;
 
-        // Bewusst SetWindowPos mit SWP_ASYNCWINDOWPOS statt ShowWindow: ShowWindow
-        // stellt WM_SHOWWINDOW an das fremde Fenster zu und wartet dabei auf dessen
-        // Thread. Haengt der GStreamer-Thread gerade (Treiber-Reset, Monitorwechsel,
-        // Docking), wuerde unser UI-Thread hier mit haengen — und zwar bei jedem
-        // Oeffnen eines Dialogs.
-        var flags = Native.SWP_NOMOVE | Native.SWP_NOSIZE | Native.SWP_NOZORDER |
-                    Native.SWP_NOACTIVATE | Native.SWP_ASYNCWINDOWPOS |
-                    (visible ? Native.SWP_SHOWWINDOW : Native.SWP_HIDEWINDOW);
-        Native.SetWindowPos(_embedded, IntPtr.Zero, 0, 0, 0, 0, flags);
+        // ACHTUNG — hier NICHT experimentieren. Stand 1.0.4.0, funktioniert.
+        //
+        // Versucht und wieder verworfen, jeweils schlechter als das hier:
+        //  - SetWindowPos mit SWP_SHOWWINDOW/SWP_HIDEWINDOW: blendet aus, holt aber
+        //    nicht zuverlaessig zurueck.
+        //  - ShowWindowAsync: gleiches Ergebnis wie ShowWindow, kein Gewinn.
+        //  - Fenster aus dem Elternfenster herausschieben statt verstecken, und beim
+        //    Zurueckholen die Breite kurz aendern, um ein WM_SIZE zu erzwingen:
+        //    behebt das Schwarz NICHT und stoert zusaetzlich die Mirror-Verbindung.
+        //    Im uxplay-Log erscheint dann "raop_rtp_mirror->running is no longer true";
+        //    der Client verbindet zwar von selbst neu, aber der Stream reisst ab.
+        //    Unterm Strich schlechter als der Zustand vorher.
+        //
+        // Bekannte Einschraenkung, die es auch schon vor 1.0.5.0 gab: Nach dem
+        // Schliessen eines Dialogs bleibt die Videoflaeche schwarz, bis das iOS-Geraet
+        // von sich aus ein neues Vollbild schickt. Der D3D-Videosink praesentiert nicht
+        // von selbst neu. Das ist unschoen, aber harmlos — Ton und Verbindung laufen
+        // durch. Eine Loesung dafuer gehoert in eine eigene Version und braucht
+        // vermutlich einen anderen Videosink oder gst_video_overlay statt SetParent.
+        ShowWindow(_embedded, visible ? SW_SHOWNA : SW_HIDE);
     }
+
+    private const int SW_HIDE   = 0;
+    private const int SW_SHOWNA = 8;   // anzeigen, ohne den Fokus zu stehlen
+
+    [DllImport("user32.dll")]
+    private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+    /// <summary>Zustand eines Fensters kompakt fuer das Log.</summary>
+    private static string Describe(IntPtr hwnd)
+    {
+        if (hwnd == IntPtr.Zero) return "(null)";
+        if (!Native.IsWindow(hwnd)) return $"0x{hwnd.ToInt64():X} ZERSTOERT";
+        var cls = new System.Text.StringBuilder(256);
+        Native.GetClassName(hwnd, cls, cls.Capacity);
+        bool vis = Native.IsWindowVisible(hwnd);
+        long style = Native.GetWindowLongPtr(hwnd, Native.GWL_STYLE).ToInt64();
+        Native.GetWindowRect(hwnd, out var r);
+        var parent = Native.GetParent(hwnd);
+        return $"0x{hwnd.ToInt64():X} cls='{cls}' sichtbar={vis} " +
+               $"WS_VISIBLE={(style & Native.WS_VISIBLE) != 0} WS_CHILD={(style & Native.WS_CHILD) != 0} " +
+               $"rect=({r.Left},{r.Top})-({r.Right},{r.Bottom}) parent=0x{parent.ToInt64():X}";
+    }
+
+    /// <summary>
+    /// Listet alle direkten Kindfenster unseres App-Fensters in Z-Reihenfolge auf.
+    /// Entscheidend fuer die Frage, ob das Videofenster hinter der XAML-Insel liegt.
+    /// </summary>
+    private string DescribeZOrder()
+    {
+        var sb = new System.Text.StringBuilder();
+        var child = Native.GetWindow(_appHwnd, Native.GW_CHILD);
+        int i = 0;
+        while (child != IntPtr.Zero && i < 20)
+        {
+            var marke = child == _embedded ? "  <== VIDEO" : "";
+            sb.Append($"           {i}: {Describe(child)}{marke}\n");
+            child = Native.GetWindow(child, Native.GW_HWNDNEXT);
+            i++;
+        }
+        return sb.Length == 0 ? "           (keine Kindfenster)" : sb.ToString().TrimEnd();
+    }
+
 
     private void OnTick(DispatcherQueueTimer sender, object args)
     {

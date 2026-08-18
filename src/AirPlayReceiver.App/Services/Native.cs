@@ -64,6 +64,23 @@ internal static class Native
     [return: MarshalAs(UnmanagedType.Bool)]
     public static extern bool IsWindow(IntPtr hWnd);
 
+    [DllImport("user32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    public static extern int GetClassName(IntPtr hWnd, System.Text.StringBuilder lpClassName, int nMaxCount);
+
+    [DllImport("user32.dll")]
+    public static extern IntPtr GetParent(IntPtr hWnd);
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct RECT { public int Left, Top, Right, Bottom; }
+
+    public const uint GW_HWNDNEXT = 2;
+    public const uint GW_HWNDPREV = 3;
+    public const uint GW_CHILD    = 5;
+
     public const uint SWP_NOSIZE         = 0x0001;
     public const uint SWP_NOMOVE         = 0x0002;
     public const uint SWP_NOZORDER       = 0x0004;
