@@ -64,6 +64,11 @@ public sealed class UxPlayController : IDisposable
     /// </summary>
     private readonly SemaphoreSlim _gate = new(1, 1);
 
+    /// <summary>
+    /// Bindet die Kindprozesse an unser Prozessleben. Siehe <see cref="ProcessJob"/>.
+    /// </summary>
+    private readonly ProcessJob _job = new();
+
     public AppSettings Settings { get; set; } = new();
 
     private Process? _process;
@@ -74,14 +79,30 @@ public sealed class UxPlayController : IDisposable
     /// <summary>true, sobald uxplay "Initialized server socket(s)" gemeldet hat.</summary>
     private volatile bool _serverReady;
 
+    /// <summary>Die Waisensuche laeuft nur beim ersten Start eines Programmlaufs.</summary>
+    private bool _leftoversChecked;
+
     /// <summary>Bricht die Startueberwachung ab, wenn vorher gestoppt wird.</summary>
     private CancellationTokenSource? _startupWatch;
 
     /// <summary>
-    /// Frist, in der uxplay seinen Server-Socket gemeldet haben muss. Im Normalfall
-    /// steht die Zeile sofort im Output; bleibt sie aus, stimmt etwas grundlegend nicht.
+    /// Frist, in der uxplay seinen Server-Socket gemeldet haben muss.
+    ///
+    /// Bewusst sehr grosszuegig. Beim ersten Start nach einem Update baut GStreamer
+    /// seine Plugin-Registry neu auf (~1,6 MB, rund 250 Plugins), weil sich der
+    /// Paketpfad mit jeder Version aendert. Gemessen auf einem schnellen NVMe-PC:
+    ///   warm                      2,7 s
+    ///   Registry geloescht        5,2 s
+    ///   erster Start nach Update 13,3 s
+    /// Auf aelterer Hardware mit HDD entsprechend ein Vielfaches davon. Eine knappe
+    /// Frist wuerde dem Nutzer nach jedem Store-Update faelschlich die Firewall
+    /// vorwerfen — schlimmer als gar keine Meldung.
+    ///
+    /// Dieser Watchdog ist nur das letzte Netz. Die echten Fehlerfaelle erkennt der
+    /// Parser in <see cref="ClassifyFault"/> binnen Millisekunden, und ein vorzeitiges
+    /// Prozessende faengt <see cref="OnExited"/> ab.
     /// </summary>
-    private static readonly TimeSpan StartupTimeout = TimeSpan.FromSeconds(12);
+    private static readonly TimeSpan StartupTimeout = TimeSpan.FromSeconds(120);
 
     public UxPlayState State { get; private set; } = UxPlayState.Stopped;
     public string? LastError { get; private set; }
@@ -196,6 +217,22 @@ public sealed class UxPlayController : IDisposable
             _serverReady = false;
             Fault = UxPlayFault.None;
 
+            if (!_job.IsValid)
+                WriteLog("WARNUNG: Job-Objekt nicht verfuegbar — Kindprozesse koennen einen Absturz ueberleben.");
+
+            // Reste aus einem frueheren unsauberen Ende beseitigen. Betrifft
+            // ausschliesslich Prozesse, die aus UNSEREM Programmverzeichnis laufen —
+            // ein fremder Bonjour-Dienst von Apple bleibt unangetastet.
+            //
+            // Nur einmal pro Programmlauf: Waisen kann es nur vor dem ersten Start
+            // geben, danach haelt das Job-Objekt alles zusammen. Der Scan kostet
+            // zwei komplette Prozesslisten-Durchlaeufe, die sparen wir uns.
+            if (!_leftoversChecked)
+            {
+                _leftoversChecked = true;
+                KillLeftoversFrom(uxplayDir);
+            }
+
             // Eigenen mDNSResponder.exe -server starten, falls noch kein
             // Bonjour-Daemon laeuft. Bietet den Named-Pipe-Endpoint, an den
             // dnssd.dll im uxplay-Prozess connectet.
@@ -250,6 +287,7 @@ public sealed class UxPlayController : IDisposable
 
             Volatile.Write(ref _process, proc);
             proc.Start();
+            if (!_job.Assign(proc)) WriteLog("WARNUNG: uxplay konnte dem Job-Objekt nicht zugewiesen werden.");
             proc.BeginOutputReadLine();
             proc.BeginErrorReadLine();
 
@@ -356,6 +394,40 @@ public sealed class UxPlayController : IDisposable
         try { p.Dispose(); } catch { }
     }
 
+    /// <summary>
+    /// Beendet uxplay-/mDNSResponder-Prozesse, die aus dem uebergebenen Verzeichnis
+    /// stammen. Der Pfadvergleich ist die Sicherung: ein von Apple installierter
+    /// Bonjour-Dienst laeuft aus System32 und wird dadurch nie angefasst.
+    /// </summary>
+    private void KillLeftoversFrom(string uxplayDir)
+    {
+        foreach (var name in new[] { "uxplay", "mDNSResponder" })
+        {
+            Process[] found;
+            try { found = Process.GetProcessesByName(name); }
+            catch { continue; }
+
+            foreach (var p in found)
+            {
+                try
+                {
+                    string? path = null;
+                    try { path = p.MainModule?.FileName; }
+                    catch { /* fremder Prozess, kein Zugriff — dann erst recht nicht anfassen */ }
+
+                    if (path is not null &&
+                        path.StartsWith(uxplayDir, StringComparison.OrdinalIgnoreCase))
+                    {
+                        WriteLog($"Waise aus frueherem Lauf gefunden: {name} (PID {p.Id}) — wird beendet.");
+                        try { p.Kill(entireProcessTree: true); } catch { }
+                    }
+                }
+                catch { }
+                finally { try { p.Dispose(); } catch { } }
+            }
+        }
+    }
+
     private async Task StartMdnsResponderIfNeededAsync(string uxplayDir)
     {
         // Vorherige Instanz aufraeumen, falls Start() schon einmal versucht wurde.
@@ -412,6 +484,7 @@ public sealed class UxPlayController : IDisposable
             WriteLog("--- starte mDNSResponder -server ---");
             Volatile.Write(ref _mdnsProcess, mdns);
             mdns.Start();
+            if (!_job.Assign(mdns)) WriteLog("WARNUNG: mDNSResponder konnte dem Job-Objekt nicht zugewiesen werden.");
             mdns.BeginOutputReadLine();
             mdns.BeginErrorReadLine();
 
@@ -637,6 +710,9 @@ public sealed class UxPlayController : IDisposable
         // des Fensters auf dem UI-Thread und darf nicht blockieren.
         KillNoWait(Interlocked.Exchange(ref _process, null));
         KillNoWait(Interlocked.Exchange(ref _mdnsProcess, null));
+        // Letzte Instanz: schliesst das Job-Handle und raeumt alles ab, was oben
+        // wider Erwarten noch laeuft.
+        _job.Dispose();
         CloseLog();
         // _gate wird bewusst NICHT disposed: ein noch laufender Hintergrund-Stop
         // koennte sonst beim WaitAsync eine ObjectDisposedException bekommen.

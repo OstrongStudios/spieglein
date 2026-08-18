@@ -60,9 +60,17 @@ internal static class Native
     public const long WS_EX_DLGMODALFRAME = 0x00000001L;
     public const long WS_EX_STATICEDGE  = 0x00020000L;
 
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool IsWindow(IntPtr hWnd);
+
+    public const uint SWP_NOSIZE         = 0x0001;
+    public const uint SWP_NOMOVE         = 0x0002;
     public const uint SWP_NOZORDER       = 0x0004;
     public const uint SWP_NOACTIVATE     = 0x0010;
     public const uint SWP_FRAMECHANGED   = 0x0020;
+    public const uint SWP_SHOWWINDOW     = 0x0040;
+    public const uint SWP_HIDEWINDOW     = 0x0080;
     public const uint SWP_ASYNCWINDOWPOS = 0x4000;
 
     public const uint GW_OWNER = 4;

@@ -48,22 +48,45 @@ public sealed class VideoEmbedder
     public void Stop()
     {
         _searchTimer?.Stop();
-        if (_embedded != IntPtr.Zero)
+        if (_embedded == IntPtr.Zero) return;
+
+        var child = _embedded;
+        // Feld zuerst leeren: ApplyBounds/SetEmbeddedVisible sollen das Fenster
+        // ab jetzt nicht mehr anfassen, egal was unten noch passiert.
+        _embedded = IntPtr.Zero;
+
+        if (Native.IsWindow(child))
         {
             if (_childSubclassProc is not null)
             {
-                RemoveWindowSubclass(_embedded, _childSubclassProc, _childSubclassId);
-                _childSubclassProc = null;
+                try { RemoveWindowSubclass(child, _childSubclassProc, _childSubclassId); } catch { }
             }
-            _embedded = IntPtr.Zero;
-            EmbeddedChanged?.Invoke(this, EventArgs.Empty);
+
+            // Kopplung loesen. Solange ein fremdes Fenster Child unseres Fensters
+            // ist, haengen die Eingabewarteschlangen beider Threads aneinander:
+            // blockiert der GStreamer-Thread in uxplay, blockiert unsere WinUI-
+            // Nachrichtenschleife mit — obwohl bei uns kein eigener Stackframe
+            // beteiligt ist. Genau das erzeugt Hangs ohne verwertbaren Stack.
+            // Vorher ausblenden, damit das Fenster nicht kurz frei aufblitzt.
+            try
+            {
+                Native.SetWindowPos(child, IntPtr.Zero, 0, 0, 0, 0,
+                    Native.SWP_NOMOVE | Native.SWP_NOSIZE | Native.SWP_NOZORDER |
+                    Native.SWP_NOACTIVATE | Native.SWP_HIDEWINDOW | Native.SWP_ASYNCWINDOWPOS);
+                Native.SetParent(child, IntPtr.Zero);
+            }
+            catch { }
         }
+
+        _childSubclassProc = null;
+        EmbeddedChanged?.Invoke(this, EventArgs.Empty);
     }
 
     /// <summary>Schiebt das eingebettete Fenster auf die uebergebenen Client-Coords.</summary>
     public void ApplyBounds(int x, int y, int width, int height)
     {
         if (_embedded == IntPtr.Zero || width <= 0 || height <= 0) return;
+        if (!Native.IsWindow(_embedded)) return;
         Native.SetWindowPos(_embedded, IntPtr.Zero, x, y, width, height,
             Native.SWP_NOZORDER | Native.SWP_NOACTIVATE | Native.SWP_ASYNCWINDOWPOS);
     }
@@ -75,14 +98,18 @@ public sealed class VideoEmbedder
     public void SetEmbeddedVisible(bool visible)
     {
         if (_embedded == IntPtr.Zero) return;
-        ShowWindow(_embedded, visible ? SW_SHOWNA : SW_HIDE);
+        if (!Native.IsWindow(_embedded)) return;
+
+        // Bewusst SetWindowPos mit SWP_ASYNCWINDOWPOS statt ShowWindow: ShowWindow
+        // stellt WM_SHOWWINDOW an das fremde Fenster zu und wartet dabei auf dessen
+        // Thread. Haengt der GStreamer-Thread gerade (Treiber-Reset, Monitorwechsel,
+        // Docking), wuerde unser UI-Thread hier mit haengen — und zwar bei jedem
+        // Oeffnen eines Dialogs.
+        var flags = Native.SWP_NOMOVE | Native.SWP_NOSIZE | Native.SWP_NOZORDER |
+                    Native.SWP_NOACTIVATE | Native.SWP_ASYNCWINDOWPOS |
+                    (visible ? Native.SWP_SHOWWINDOW : Native.SWP_HIDEWINDOW);
+        Native.SetWindowPos(_embedded, IntPtr.Zero, 0, 0, 0, 0, flags);
     }
-
-    private const int SW_HIDE    = 0;
-    private const int SW_SHOWNA  = 8;
-
-    [DllImport("user32.dll")]
-    private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
     private void OnTick(DispatcherQueueTimer sender, object args)
     {
