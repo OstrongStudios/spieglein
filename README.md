@@ -15,6 +15,9 @@
 - **Anzeige des verbundenen Geräts** während des Streams + „Letzte Verbindung"-Hinweis
 - **Tray-Icon** mit Schnellzugriff, App-Beenden über Tray
 - **Sleep-/Wake-Watchdog** — verbindet nach PC-Standby automatisch wieder
+- **Bildschirm bleibt an** während einer Übertragung — kein Standby mitten im Film
+- **Firewall-Freigabe ohne Nachfrage** — die Regeln stehen im MSIX-Manifest und werden bei der Installation angelegt
+- **Verständliche Fehlermeldungen** statt stiller Ausfälle
 - **Mehrsprachig** — Deutsch, Englisch, Spanisch, Französisch, Portugiesisch, Chinesisch (vereinfacht)
 - **Lokal-only** — keine Cloud, kein Tracking, keine Telemetrie
 
@@ -110,7 +113,12 @@ Wenn Spieglein nicht startet oder Verbindungsprobleme auftreten, helfen die loka
 | `settings.json` | Deine Konfiguration (kann zum Reset gelöscht werden) |
 
 Häufige Erst-Setup-Probleme:
-- **iPhone findet PC nicht:** Windows-Firewall blockt UDP 5353. „Spieglein starten" muss einmal mit Admin-Bestätigung freigegeben werden.
+- **Erster Start nach einem Update dauert 10–20 Sekunden**, bis der Status auf grün springt. GStreamer baut einmal pro Paketversion seine Plugin-Registry neu auf (~250 Plugins). Danach sind es 2–3 Sekunden. Das ist kein Hänger.
+- **iPhone findet PC nicht:** Ab 1.0.5.0 legt Windows die Firewall-Regeln bei der Installation selbst an (siehe `windows.firewallRules` im Manifest) — eine Nachfrage sollte nicht mehr kommen. Bleibt es trotzdem dabei, ist meist das WLAN als **„Öffentlich"** eingestuft; unter *Einstellungen → Netzwerk und Internet* auf „Privat" umstellen. Prüfen, ob die Regeln existieren:
+  ```powershell
+  Get-NetFirewallApplicationFilter | Where-Object { $_.Program -match 'uxplay|mDNSResponder' }
+  ```
+  Achtung: Wer vor 1.0.5.0 einen Firewall-Dialog *ohne* Administratorrechte beantwortet hat, hat dabei eine **Block-Regel** erzeugt. Block schlägt Allow — diese Regel muss von Hand gelöscht werden.
 - **„Aktive Verbindung" aber kein Bild:** Du hast wahrscheinlich AirPlay über die *Lautstärke-Auswahl* statt *Bildschirmsynchronisierung* gestartet (siehe iOS-Kontrollzentrum, oben links das Doppelfenster-Symbol).
 
 ## Releases & Changelog

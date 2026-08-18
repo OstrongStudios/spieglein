@@ -1,6 +1,6 @@
 # Datenschutzerklärung für die Anwendung „Spieglein"
 
-*Stand: 17. Juli 2026 (gültig ab Version 1.0.4.0)*
+*Stand: 18. August 2026 (gültig ab Version 1.0.5.0)*
 
 ## 1. Verantwortlicher
 
@@ -40,6 +40,8 @@ Spieglein nutzt im Betrieb ausschließlich lokale Netzwerkverbindungen:
 - mDNS / Bonjour (UDP 5353) — Bekanntgabe des AirPlay-Empfängers im lokalen Netzwerk
 - AirPlay-Steuerung (TCP 7000, 7001, 7100)
 - RTP-Audio/Video (UDP 6000, 6001, 7011)
+
+Ab Version 1.0.5.0 sind diese Ports fest vergeben (vorher wurden sie zufällig gewählt), und die Anwendung deklariert für sie im Installationspaket **Freigaberegeln der Windows-Firewall**. Windows legt diese Regeln beim Installieren an und entfernt sie beim Deinstallieren wieder. Die Regeln erlauben ausschließlich **eingehende** Verbindungen aus dem lokalen Netzwerk zu den beiden mitgelieferten Komponenten `uxplay.exe` und `mDNSResponder.exe`. Es werden dadurch keine Daten erhoben oder übermittelt.
 
 Für den Betrieb der Anwendung wird **keine Internet-Verbindung aufgebaut**. Die Anwendung sendet von sich aus keine Daten nach außen — es gibt keine Server der Ostrong Studios, mit denen sie kommuniziert. Updates erfolgen ausschließlich über den Microsoft-Store-Mechanismus; dafür gilt die [Datenschutzerklärung von Microsoft](https://privacy.microsoft.com/de-de/privacystatement).
 
@@ -106,15 +108,15 @@ Web: https://www.dsb.gv.at
 
 ## 10. Stand und Änderungen
 
-Diese Datenschutzerklärung ist gültig ab dem **17. Juli 2026** (Version 1.0.4.0). Bei Anpassungen der Anwendung oder bei Änderungen gesetzlicher Vorgaben behalten wir uns vor, diese Erklärung anzupassen. Die jeweils aktuelle Fassung ist unter https://ostrongstudios.de/datenschutzerklaerung/ einsehbar.
+Diese Datenschutzerklärung ist gültig ab dem **18. August 2026** (Version 1.0.5.0). Bei Anpassungen der Anwendung oder bei Änderungen gesetzlicher Vorgaben behalten wir uns vor, diese Erklärung anzupassen. Die jeweils aktuelle Fassung ist unter https://ostrongstudios.de/datenschutzerklaerung/ einsehbar.
 
 **Vorgängerversionen:**
+- 17. Juli 2026 (Version 1.0.4.0)
 - 30. Mai 2026 (Version 1.0.3.0)
 - 17. Mai 2026 (initial, Versionen 1.0.0.0 bis 1.0.1.0)
 
-**Änderungen gegenüber der Fassung vom 30. Mai 2026:**
-- Neuer Abschnitt 4a zu den beiden externen Links in der Anwendung („Kaffee spendieren", Quellcode-Link) samt Nennung der dortigen Anbieter
-- Ergänzung der Datentabelle um das Crash-Protokoll und den Namen des zuletzt verbundenen Geräts
+**Änderungen gegenüber der Fassung vom 17. Juli 2026:**
+- Abschnitt 4 ergänzt: Die Netzwerk-Ports sind ab 1.0.5.0 fest vergeben, und das Installationspaket deklariert dafür eingehende Freigaberegeln der Windows-Firewall.
 
 ---
 
