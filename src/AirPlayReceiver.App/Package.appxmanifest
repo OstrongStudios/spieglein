@@ -3,12 +3,13 @@
     xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
     xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
     xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-    IgnorableNamespaces="uap rescap">
+    xmlns:desktop2="http://schemas.microsoft.com/appx/manifest/desktop/windows10/2"
+    IgnorableNamespaces="uap rescap desktop2">
 
     <Identity
         Name="4663Ostronggames.Spieglein"
         Publisher="CN=654B9AD8-3E71-4D00-B420-E162C13CD666"
-        Version="1.0.4.0"
+        Version="1.0.5.0"
         ProcessorArchitecture="x64" />
 
     <Properties>
@@ -55,6 +56,44 @@
             </uap:VisualElements>
         </Application>
     </Applications>
+
+    <!--
+      Firewall-Regeln fuer die beiden Kindprozesse.
+
+      Warum das hier stehen MUSS: Den listen()-Aufruf machen uxplay.exe und
+      mDNSResponder.exe, nicht AirPlayReceiver.App.exe. Ohne diese Deklaration
+      fragt Windows den Nutzer nach zwei ihm voellig unbekannten EXE-Dateien aus
+      C:\Program Files\WindowsApps\... — oder gar nicht. Und laut Microsoft gilt:
+      ist der Nutzer kein lokaler Admin, erzeugt der Dialog eine BLOCK-Regel,
+      egal welche Schaltflaeche er anklickt, und erscheint danach nie wieder.
+      Die App waere auf dem Rechner dauerhaft und lautlos kaputt.
+
+      Regeln aus dem Manifest legt die MSIX-Deployment-Engine beim Installieren
+      als SYSTEM an: kein UAC, kein Dialog, keine Adminrechte noetig. Sie werden
+      bei Deinstallation wieder entfernt.
+
+      Die Ports muessen zu UxPlayController.BuildArguments() passen — dort sorgt
+      das Argument "-p" dafuer, dass uxplay genau diese festen Ports belegt statt
+      zufaelliger. Ohne "-p" greift keine dieser Regeln.
+    -->
+    <Extensions>
+        <desktop2:Extension Category="windows.firewallRules">
+            <desktop2:FirewallRules Executable="uxplay\uxplay.exe">
+                <!-- AirPlay/RTSP-Steuerung -->
+                <desktop2:Rule Direction="in" IPProtocol="TCP" LocalPortMin="7000" LocalPortMax="7001" Profile="all" />
+                <desktop2:Rule Direction="in" IPProtocol="TCP" LocalPortMin="7100" LocalPortMax="7100" Profile="all" />
+                <!-- RTP Audio/Video -->
+                <desktop2:Rule Direction="in" IPProtocol="UDP" LocalPortMin="6000" LocalPortMax="6001" Profile="all" />
+                <desktop2:Rule Direction="in" IPProtocol="UDP" LocalPortMin="7011" LocalPortMax="7011" Profile="all" />
+            </desktop2:FirewallRules>
+        </desktop2:Extension>
+        <desktop2:Extension Category="windows.firewallRules">
+            <desktop2:FirewallRules Executable="uxplay\mDNSResponder.exe">
+                <!-- Bonjour/mDNS-Discovery — ohne das findet kein iPhone den PC -->
+                <desktop2:Rule Direction="in" IPProtocol="UDP" LocalPortMin="5353" LocalPortMax="5353" Profile="all" />
+            </desktop2:FirewallRules>
+        </desktop2:Extension>
+    </Extensions>
 
     <!--
       runFullTrust: erlaubt uns, uxplay.exe + mDNSResponder.exe als Child-Prozesse

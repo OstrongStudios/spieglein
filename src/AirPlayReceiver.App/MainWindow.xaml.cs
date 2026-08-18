@@ -24,6 +24,8 @@ public sealed partial class MainWindow : Window
     private AppSettings _settings = AppSettings.Load();
     private bool _isFullscreen;
     private bool _quitRequested;
+    /// <summary>Sperre gegen ueberlappende Start/Stop-Vorgaenge (Button, Tray, Einstellungen).</summary>
+    private bool _transitioning;
 
     public MainWindow()
     {
@@ -73,7 +75,7 @@ public sealed partial class MainWindow : Window
             _strings.GetString("Button_Start"),
             _strings.GetString("Tray_Quit"));
         _tray.LeftClicked            += (_, _) => DispatcherQueue.TryEnqueue(ShowWindowFromTray);
-        _tray.ToggleAirPlayRequested += (_, _) => DispatcherQueue.TryEnqueue(() => ToggleButton_Click(this, new RoutedEventArgs()));
+        _tray.ToggleAirPlayRequested += (_, _) => DispatcherQueue.TryEnqueue(() => _ = ToggleAsync());
         _tray.QuitRequested          += (_, _) => DispatcherQueue.TryEnqueue(() => { _quitRequested = true; this.Close(); });
 
         UpdateUi(UxPlayState.Stopped);
@@ -158,16 +160,31 @@ public sealed partial class MainWindow : Window
         await ShowDialogSafelyAsync(dlg);
         if (!dlg.SaveRequested) return;
 
+        var previous = _settings;
         _settings = dlg.Result;
+        // Der Dialog baut ein frisches AppSettings nur aus seinen vier Feldern.
+        // Ohne diese Zeile loescht jedes Speichern die "Letzte Verbindung".
+        _settings.LastConnectedDevice = previous.LastConnectedDevice;
         _settings.Save();
         _controller.Settings = _settings;
 
-        // Wenn gerade gestreamt wird: uxplay neu starten, damit -n / -pin / -vs greifen.
-        if (_controller.State is UxPlayState.Ready or UxPlayState.Streaming)
+        // Nur neu starten, wenn sich etwas geaendert hat, das in die uxplay-
+        // Kommandozeile eingeht — ein Sprachwechsel allein braucht keinen Neustart.
+        bool needsRestart = previous.DeviceName != _settings.DeviceName
+                         || previous.Pin        != _settings.Pin
+                         || previous.AudioOnly  != _settings.AudioOnly;
+
+        if (needsRestart && _controller.State is UxPlayState.Ready or UxPlayState.Streaming)
         {
-            _controller.Stop();
-            _controller.Start();
-            if (_controller.UxPlayProcessId is { } pid) _embedder.StartSearchFor((uint)pid);
+            BeginTransition();
+            try
+            {
+                _embedder.Stop();
+                await _controller.RestartAsync();
+                if (_controller.UxPlayProcessId is { } pid) _embedder.StartSearchFor((uint)pid);
+            }
+            catch (Exception ex) { DetailText.Text = ex.Message; }
+            finally { EndTransition(); }
         }
 
         // Sprache geaendert -> Auto-Restart anbieten (Strings sind beim Start ausgelesen).
@@ -311,21 +328,56 @@ public sealed partial class MainWindow : Window
         await ShowDialogSafelyAsync(dlg);
     }
 
-    private void ToggleButton_Click(object sender, RoutedEventArgs e)
+    private async void ToggleButton_Click(object sender, RoutedEventArgs e) => await ToggleAsync();
+
+    /// <summary>
+    /// Start und Stop laufen asynchron und sind gegen Mehrfachklicks gesperrt.
+    /// Frueher lief beides synchron auf dem UI-Thread (Stop bis 10 s, Start bis 6 s)
+    /// und ohne Reentranz-Schutz — gestaute Klicks wurden danach als
+    /// Start/Stop/Start abgearbeitet und Windows meldete einen Hang.
+    /// </summary>
+    private async System.Threading.Tasks.Task ToggleAsync()
     {
-        if (_controller.State == UxPlayState.Stopped || _controller.State == UxPlayState.Error)
+        if (_transitioning) return;
+        BeginTransition();
+        try
         {
-            _controller.Start();
-            if (_controller.UxPlayProcessId is { } pid)
+            if (_controller.State is UxPlayState.Stopped or UxPlayState.Error)
             {
-                _embedder.StartSearchFor((uint)pid);
+                await _controller.StartAsync();
+                if (_controller.UxPlayProcessId is { } pid) _embedder.StartSearchFor((uint)pid);
+            }
+            else
+            {
+                _embedder.Stop();
+                await _controller.StopAsync();
             }
         }
-        else
+        catch (Exception ex)
         {
-            _embedder.Stop();
-            _controller.Stop();
+            // Dieser Handler ist async void — eine durchgereichte Exception wuerde
+            // die App beenden. Der Controller meldet Fehler ohnehin ueber seinen
+            // Zustand, hier bleibt nur der Sicherheitsnetz-Fall.
+            DetailText.Text = ex.Message;
         }
+        finally
+        {
+            EndTransition();
+        }
+    }
+
+    private void BeginTransition()
+    {
+        _transitioning         = true;
+        ToggleButton.IsEnabled = false;
+        MenuSettings.IsEnabled = false;
+    }
+
+    private void EndTransition()
+    {
+        _transitioning         = false;
+        ToggleButton.IsEnabled = true;
+        MenuSettings.IsEnabled = true;
     }
 
     private void VideoHost_SizeChanged(object sender, SizeChangedEventArgs e) => UpdateEmbeddedBounds();
