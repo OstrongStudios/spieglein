@@ -11,9 +11,34 @@ namespace AirPlayReceiver.App.Services;
 public enum UxPlayState
 {
     Stopped,
+    /// <summary>
+    /// uxplay laeuft, hat seinen Server-Socket aber noch nicht gemeldet.
+    /// Erst danach darf die UI "Bereit" behaupten — vorher waere das eine
+    /// unbelegte Zusicherung, die bei blockierter Firewall schlicht falsch ist.
+    /// </summary>
+    Starting,
     Ready,
     Streaming,
     Error,
+}
+
+/// <summary>
+/// Klassifizierte Fehlerursache aus dem uxplay-Output. Die Zuordnung zu einem
+/// lokalisierten Text passiert in der UI, nicht hier.
+/// </summary>
+public enum UxPlayFault
+{
+    None,
+    /// <summary>mDNS/Bonjour nicht erreichbar — praktisch immer die Firewall.</summary>
+    DiscoveryBlocked,
+    /// <summary>Ein anderes Geraet im Netz benutzt denselben Namen.</summary>
+    NameConflict,
+    /// <summary>Ein benoetigter Port ist belegt (haeufig ein verwaister uxplay).</summary>
+    PortBusy,
+    /// <summary>Verbindung zum Client waehrend des Streams verloren.</summary>
+    NetworkDropped,
+    /// <summary>Sonstiger Fehler — Rohtext steht in LastError.</summary>
+    Generic,
 }
 
 public sealed class UxPlayController : IDisposable
@@ -46,8 +71,24 @@ public sealed class UxPlayController : IDisposable
     private StreamWriter? _logWriter;
     private volatile bool _disposed;
 
+    /// <summary>true, sobald uxplay "Initialized server socket(s)" gemeldet hat.</summary>
+    private volatile bool _serverReady;
+
+    /// <summary>Bricht die Startueberwachung ab, wenn vorher gestoppt wird.</summary>
+    private CancellationTokenSource? _startupWatch;
+
+    /// <summary>
+    /// Frist, in der uxplay seinen Server-Socket gemeldet haben muss. Im Normalfall
+    /// steht die Zeile sofort im Output; bleibt sie aus, stimmt etwas grundlegend nicht.
+    /// </summary>
+    private static readonly TimeSpan StartupTimeout = TimeSpan.FromSeconds(12);
+
     public UxPlayState State { get; private set; } = UxPlayState.Stopped;
     public string? LastError { get; private set; }
+
+    /// <summary>Klassifizierte Ursache zum aktuellen Fehler- bzw. Warnzustand.</summary>
+    public UxPlayFault Fault { get; private set; } = UxPlayFault.None;
+
     public string LogPath => _logPath;
 
     /// <summary>
@@ -152,6 +193,8 @@ public sealed class UxPlayController : IDisposable
 
             OpenLog();
             lock (_recentLines) { _recentLines.Clear(); }
+            _serverReady = false;
+            Fault = UxPlayFault.None;
 
             // Eigenen mDNSResponder.exe -server starten, falls noch kein
             // Bonjour-Daemon laeuft. Bietet den Named-Pipe-Endpoint, an den
@@ -195,28 +238,73 @@ public sealed class UxPlayController : IDisposable
             WriteLog($"--- starte uxplay ({DateTime.Now:yyyy-MM-dd HH:mm:ss}) ---");
             WriteLog($"    Argumente: {proc.StartInfo.Arguments}");
 
+            LastError = null;
+            // Bewusst NICHT Ready: erst wenn uxplay seinen Server-Socket meldet,
+            // ist die Zusage "bereit fuer Verbindungen" gedeckt.
+            //
+            // Der Zustandswechsel muss VOR BeginOutputReadLine passieren: uxplay
+            // meldet "Initialized server socket(s)" teils wenige Millisekunden nach
+            // dem Start. Stuende hier noch Stopped, liefe die Ready-Umschaltung in
+            // HandleOutput ins Leere und die App bliebe dauerhaft in "Wird gestartet".
+            SetState(UxPlayState.Starting);
+
             Volatile.Write(ref _process, proc);
             proc.Start();
             proc.BeginOutputReadLine();
             proc.BeginErrorReadLine();
 
-            LastError = null;
-            SetState(UxPlayState.Ready);
+            // Sicherheitsnetz, falls die Meldung die Umschaltung doch ueberholt hat.
+            if (_serverReady && State == UxPlayState.Starting) SetState(UxPlayState.Ready);
+            else StartStartupWatchdog(proc);
         }
         catch (Exception ex)
         {
             Volatile.Write(ref _process, null);
             try { proc?.Dispose(); } catch { }
             LastError = ex.Message;
+            Fault = UxPlayFault.Generic;
             WriteLog($"FEHLER beim Start: {ex}");
             SetState(UxPlayState.Error);
         }
+    }
+
+    /// <summary>
+    /// Schlaegt Alarm, wenn uxplay innerhalb der Frist keinen Server-Socket meldet.
+    /// Frueher blieb die UI in so einem Fall dauerhaft auf gruen stehen.
+    /// </summary>
+    private void StartStartupWatchdog(Process owner)
+    {
+        _startupWatch?.Cancel();
+        _startupWatch?.Dispose();
+        _startupWatch = new CancellationTokenSource();
+        var token = _startupWatch.Token;
+
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await Task.Delay(StartupTimeout, token).ConfigureAwait(false);
+                if (token.IsCancellationRequested) return;
+                if (_serverReady) return;
+                // Gehoert der ueberwachte Prozess noch zum aktuellen Start?
+                if (!ReferenceEquals(owner, Volatile.Read(ref _process))) return;
+                if (State != UxPlayState.Starting) return;
+
+                WriteLog($"WARNUNG: nach {StartupTimeout.TotalSeconds:0} s kein 'Initialized server socket(s)' — Start gilt als fehlgeschlagen.");
+                Fault = UxPlayFault.DiscoveryBlocked;
+                SetState(UxPlayState.Error);
+            }
+            catch (OperationCanceledException) { }
+            catch (Exception ex) { try { WriteLog($"FEHLER im Start-Watchdog: {ex}"); } catch { } }
+        }, token);
     }
 
     private async Task StopCoreAsync()
     {
         // Felder zuerst leeren: ein danach eintreffendes Exited-Event erkennt an
         // der Identitaetspruefung, dass es veraltet ist, und tut nichts mehr.
+        try { _startupWatch?.Cancel(); } catch { }
+
         var ux   = Interlocked.Exchange(ref _process, null);
         var mdns = Interlocked.Exchange(ref _mdnsProcess, null);
 
@@ -224,6 +312,8 @@ public sealed class UxPlayController : IDisposable
         await KillAsync(mdns).ConfigureAwait(false);
 
         ConnectedDevice = null;
+        _serverReady    = false;
+        Fault           = UxPlayFault.None;
         CloseLog();
         SetState(UxPlayState.Stopped);
     }
@@ -360,6 +450,14 @@ public sealed class UxPlayController : IDisposable
                 while (_recentLines.Count > RecentLineLimit) _recentLines.Dequeue();
             }
 
+            // Erfolgs-Marker: erst ab hier lauscht uxplay wirklich (lib/httpd.c:694).
+            if (line.Contains("Initialized server socket", StringComparison.OrdinalIgnoreCase))
+            {
+                _serverReady = true;
+                if (State == UxPlayState.Starting) SetState(UxPlayState.Ready);
+                return;
+            }
+
             if (line.Contains("Connection request from", StringComparison.OrdinalIgnoreCase))
             {
                 var match = _deviceRegex.Match(line);
@@ -368,17 +466,73 @@ public sealed class UxPlayController : IDisposable
                     ConnectedDevice = match.Groups[1].Value.Trim();
                     DeviceConnected?.Invoke(this, ConnectedDevice);
                 }
+                Fault = UxPlayFault.None;
                 SetState(UxPlayState.Streaming);
+                return;
             }
-            else if (line.Contains("connection closed", StringComparison.OrdinalIgnoreCase))
+
+            if (line.Contains("connection closed", StringComparison.OrdinalIgnoreCase))
             {
-                SetState(UxPlayState.Ready);
+                ConnectedDevice = null;
+                if (_serverReady) SetState(UxPlayState.Ready);
+                return;
             }
+
+            var fault = ClassifyFault(line);
+            if (fault == UxPlayFault.None) return;
+
+            if (fault == UxPlayFault.NetworkDropped)
+            {
+                // Nicht fatal: uxplay laeuft weiter und wartet auf eine neue Verbindung.
+                // Der Nutzer soll aber erfahren, warum das Bild gerade stehengeblieben ist.
+                Fault           = fault;
+                ConnectedDevice = null;
+                if (State == UxPlayState.Streaming) SetState(UxPlayState.Ready);
+                return;
+            }
+
+            Fault     = fault;
+            LastError = line.Trim();
+            SetState(UxPlayState.Error);
         }
         catch (Exception ex)
         {
             try { WriteLog($"FEHLER in HandleOutput: {ex}"); } catch { }
         }
+    }
+
+    /// <summary>
+    /// Ordnet eine uxplay-Ausgabezeile einer Fehlerursache zu. Die Rohtexte stammen
+    /// aus build/uxplay-src/UxPlay/uxplay.cpp und lib/httpd.c — bei einem uxplay-Update
+    /// bitte gegenpruefen.
+    /// </summary>
+    private static UxPlayFault ClassifyFault(string line)
+    {
+        // uxplay.cpp:1946 meldet einen ignorierten Fehlschlag als INFO — kein echter Fehler.
+        if (line.Contains("ignoring because", StringComparison.OrdinalIgnoreCase))
+            return UxPlayFault.None;
+
+        if (line.Contains("No DNS-SD Server", StringComparison.OrdinalIgnoreCase)
+         || line.Contains("kDNSServiceErr_Unknown", StringComparison.OrdinalIgnoreCase)
+         || line.Contains("Could not initialize dnssd", StringComparison.OrdinalIgnoreCase)
+         || line.Contains("dnssd_register_airplay failed", StringComparison.OrdinalIgnoreCase)
+         || line.Contains("dnssd_register_raop failed", StringComparison.OrdinalIgnoreCase))
+            return UxPlayFault.DiscoveryBlocked;
+
+        if (line.Contains("kDNSServiceErr_NameConflict", StringComparison.OrdinalIgnoreCase))
+            return UxPlayFault.NameConflict;
+
+        if (line.Contains("Error initialising socket", StringComparison.OrdinalIgnoreCase)
+         || line.Contains("Error listening to IPv4 socket", StringComparison.OrdinalIgnoreCase)
+         || line.Contains("Error listening to IPv6 socket", StringComparison.OrdinalIgnoreCase)
+         || line.Contains("using same network ports", StringComparison.OrdinalIgnoreCase))
+            return UxPlayFault.PortBusy;
+
+        if (line.Contains("lost connection with client", StringComparison.OrdinalIgnoreCase)
+         || line.Contains("client may be offline", StringComparison.OrdinalIgnoreCase))
+            return UxPlayFault.NetworkDropped;
+
+        return UxPlayFault.None;
     }
 
     /// <summary>
@@ -400,20 +554,36 @@ public sealed class UxPlayController : IDisposable
             int code;
             try { code = p.ExitCode; } catch { code = -1; }
 
-            WriteLog($"--- uxplay beendet, exit={code} ---");
+            WriteLog($"--- uxplay beendet, exit={code}, serverReady={_serverReady}, fault={Fault} ---");
 
-            if (code != 0)
+            // Der Exit-Code allein taugt NICHT als Erfolgskriterium: uxplay ruft bei
+            // jedem Discovery-Fehler cleanup() auf, und cleanup() endet mit exit(0)
+            // (uxplay.cpp:3310). Frueher zeigte die App in genau diesem Fall einfach
+            // "AirPlay-Empfang aus" — ohne jede Fehlermeldung.
+            bool failed = code != 0 || !_serverReady || Fault != UxPlayFault.None;
+
+            if (failed)
             {
+                if (Fault == UxPlayFault.None)
+                {
+                    // Beendet, ohne je zu lauschen, und ohne erkannte Meldung —
+                    // mit Abstand haeufigste Ursache ist die blockierte Discovery.
+                    Fault = _serverReady ? UxPlayFault.Generic : UxPlayFault.DiscoveryBlocked;
+                }
+
                 string[] tail;
                 lock (_recentLines) { tail = _recentLines.ToArray(); }
-                var diag = tail.Length == 0
+                LastError = tail.Length == 0
                     ? $"uxplay.exe beendet mit Exit-Code {code}. Siehe Log: {_logPath}"
                     : $"uxplay.exe beendet (Exit {code}). Letzte Meldungen:\n" +
                       string.Join("\n", tail.TakeLast(5));
-                LastError = diag;
-            }
 
-            SetState(code == 0 ? UxPlayState.Stopped : UxPlayState.Error);
+                SetState(UxPlayState.Error);
+            }
+            else
+            {
+                SetState(UxPlayState.Stopped);
+            }
         }
         catch (Exception ex)
         {
@@ -451,6 +621,9 @@ public sealed class UxPlayController : IDisposable
     private void SetState(UxPlayState newState)
     {
         if (State == newState) return;
+        // Zustandswechsel protokollieren: bei Nutzerberichten ist die Abfolge das
+        // Erste, was man wissen will — die Partner-Center-Telemetrie sagt nur "Unknown".
+        WriteLog($"[state] {State} -> {newState} (thread {Environment.CurrentManagedThreadId})");
         State = newState;
         StateChanged?.Invoke(this, newState);
     }

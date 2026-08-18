@@ -61,4 +61,15 @@
   <data name="About_VersionLabel"><value>Version</value></data>
   <data name="About_Ok"><value>OK</value></data>
 
+  <!-- Diagnose / Fehlermeldungen (ab 1.0.5.0) -->
+  <data name="Status_Starting"><value>Wird gestartet …</value></data>
+  <data name="Detail_Starting"><value>AirPlay-Empfang wird vorbereitet …</value></data>
+  <data name="Error_DiscoveryBlocked"><value>Windows blockiert die Geräteerkennung – dein iPhone kann Spieglein deshalb nicht finden.
+
+1. Öffne die Windows-Einstellungen unter „Netzwerk und Internet" und stelle dieses Netzwerk auf „Privat".
+2. Erlaube Spieglein in der Windows-Firewall.</value></data>
+  <data name="Error_NameConflict"><value>Der Name „{0}" ist im Netzwerk schon vergeben. Ändere den Gerätenamen in den Einstellungen.</value></data>
+  <data name="Error_PortBusy"><value>Ein benötigter Netzwerk-Port ist belegt. Meist läuft noch eine ältere Spieglein-Sitzung im Hintergrund – melde dich ab und wieder an oder starte den PC neu.</value></data>
+  <data name="Warn_NetworkDropped"><value>Verbindung zum Gerät verloren (WLAN-Problem?). Spieglein wartet auf eine neue Verbindung.</value></data>
+
 </root>

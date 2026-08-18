@@ -61,4 +61,15 @@
   <data name="About_VersionLabel"><value>版本</value></data>
   <data name="About_Ok"><value>好</value></data>
 
+  <!-- Diagnose / Fehlermeldungen (ab 1.0.5.0) -->
+  <data name="Status_Starting"><value>正在启动 …</value></data>
+  <data name="Detail_Starting"><value>正在准备接收 AirPlay …</value></data>
+  <data name="Error_DiscoveryBlocked"><value>Windows 阻止了设备发现，因此您的 iPhone 无法找到 Spieglein。
+
+1. 打开 Windows 设置，进入“网络和 Internet”，将此网络设为“专用”。
+2. 在 Windows 防火墙中允许 Spieglein。</value></data>
+  <data name="Error_NameConflict"><value>名称“{0}”在此网络中已被占用。请在设置中修改设备名称。</value></data>
+  <data name="Error_PortBusy"><value>所需的网络端口已被占用。通常是仍有旧的 Spieglein 进程在后台运行 — 请注销后重新登录，或重启电脑。</value></data>
+  <data name="Warn_NetworkDropped"><value>与设备的连接已断开（Wi-Fi 问题？）。Spieglein 正在等待新的连接。</value></data>
+
 </root>

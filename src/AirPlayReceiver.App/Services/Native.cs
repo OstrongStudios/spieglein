@@ -66,4 +66,40 @@ internal static class Native
     public const uint SWP_ASYNCWINDOWPOS = 0x4000;
 
     public const uint GW_OWNER = 4;
+
+    // ------------------------------------------------------------------
+    // Energieverwaltung: verhindert, dass Bildschirm und System waehrend
+    // einer laufenden Uebertragung abschalten.
+    // ------------------------------------------------------------------
+
+    [DllImport("kernel32.dll")]
+    public static extern uint SetThreadExecutionState(uint esFlags);
+
+    public const uint ES_CONTINUOUS        = 0x80000000;
+    public const uint ES_SYSTEM_REQUIRED   = 0x00000001;
+    public const uint ES_DISPLAY_REQUIRED  = 0x00000002;
+}
+
+/// <summary>
+/// Haelt Bildschirm und System wach, solange gespiegelt wird. Ohne das geht
+/// mitten im Film der Bildschirm aus und der Rechner in den Standby — der
+/// Nutzer bewegt ja weder Maus noch Tastatur, waehrend er zusieht.
+///
+/// Wichtig: SetThreadExecutionState wirkt PRO THREAD. Alle Aufrufe muessen
+/// deshalb vom selben, dauerhaft lebenden Thread kommen — hier dem UI-Thread.
+/// </summary>
+internal static class KeepAwake
+{
+    private static bool _held;
+
+    /// <summary>Nur vom UI-Thread aufrufen.</summary>
+    public static void Set(bool keepAwake)
+    {
+        if (_held == keepAwake) return;
+        var flags = keepAwake
+            ? Native.ES_CONTINUOUS | Native.ES_SYSTEM_REQUIRED | Native.ES_DISPLAY_REQUIRED
+            : Native.ES_CONTINUOUS;
+        // Rueckgabe 0 bedeutet Fehlschlag; dann bleibt der alte Zustand stehen.
+        if (Native.SetThreadExecutionState(flags) != 0) _held = keepAwake;
+    }
 }

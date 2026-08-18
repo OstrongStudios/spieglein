@@ -61,4 +61,15 @@
   <data name="About_VersionLabel"><value>Versión</value></data>
   <data name="About_Ok"><value>Aceptar</value></data>
 
+  <!-- Diagnose / Fehlermeldungen (ab 1.0.5.0) -->
+  <data name="Status_Starting"><value>Iniciando …</value></data>
+  <data name="Detail_Starting"><value>Preparando la recepción AirPlay …</value></data>
+  <data name="Error_DiscoveryBlocked"><value>Windows está bloqueando la detección de dispositivos, por lo que tu iPhone no puede encontrar Spieglein.
+
+1. Abre Configuración de Windows, ve a «Red e Internet» y cambia esta red a «Privada».
+2. Permite Spieglein en el Firewall de Windows.</value></data>
+  <data name="Error_NameConflict"><value>El nombre «{0}» ya está en uso en esta red. Cambia el nombre del dispositivo en Ajustes.</value></data>
+  <data name="Error_PortBusy"><value>Un puerto de red necesario está ocupado. Normalmente queda una sesión anterior de Spieglein en segundo plano: cierra sesión y vuelve a entrar, o reinicia el PC.</value></data>
+  <data name="Warn_NetworkDropped"><value>Se perdió la conexión con el dispositivo (¿problema de wifi?). Spieglein espera una nueva conexión.</value></data>
+
 </root>

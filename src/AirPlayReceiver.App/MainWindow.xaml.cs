@@ -174,7 +174,7 @@ public sealed partial class MainWindow : Window
                          || previous.Pin        != _settings.Pin
                          || previous.AudioOnly  != _settings.AudioOnly;
 
-        if (needsRestart && _controller.State is UxPlayState.Ready or UxPlayState.Streaming)
+        if (needsRestart && _controller.State is UxPlayState.Starting or UxPlayState.Ready or UxPlayState.Streaming)
         {
             BeginTransition();
             try
@@ -425,15 +425,28 @@ public sealed partial class MainWindow : Window
                 _embedder.Stop();
                 break;
 
+            case UxPlayState.Starting:
+                // Gelb statt gruen: uxplay laeuft, hat aber noch nicht bestaetigt,
+                // dass es tatsaechlich lauscht.
+                StatusIndicator.Fill  = Brush(Colors.Goldenrod);
+                StatusText.Text       = _strings.GetString("Status_Starting");
+                ToggleButtonText.Text = _strings.GetString("Button_Stop");
+                DetailText.Text       = _strings.GetString("Detail_Starting");
+                break;
+
             case UxPlayState.Ready:
-                StatusIndicator.Fill = Brush(Colors.SeaGreen);
+                StatusIndicator.Fill  = Brush(Colors.SeaGreen);
                 StatusText.Text       = _strings.GetString("Status_Ready");
                 ToggleButtonText.Text = _strings.GetString("Button_Stop");
-                DetailText.Text       = string.Format(_strings.GetString("Detail_Ready"), _settings.DeviceName);
+                // Nach einem Verbindungsabbruch den Grund zeigen statt der Anleitung,
+                // die der Nutzer gerade erfolgreich befolgt hatte.
+                DetailText.Text       = _controller.Fault == UxPlayFault.NetworkDropped
+                    ? _strings.GetString("Warn_NetworkDropped")
+                    : string.Format(_strings.GetString("Detail_Ready"), _settings.DeviceName);
                 break;
 
             case UxPlayState.Streaming:
-                StatusIndicator.Fill = Brush(Colors.DodgerBlue);
+                StatusIndicator.Fill  = Brush(Colors.DodgerBlue);
                 StatusText.Text       = _strings.GetString("Status_Streaming");
                 ToggleButtonText.Text = _strings.GetString("Button_Stop");
                 DetailText.Text       = !string.IsNullOrWhiteSpace(_controller.ConnectedDevice)
@@ -442,14 +455,31 @@ public sealed partial class MainWindow : Window
                 break;
 
             case UxPlayState.Error:
-                StatusIndicator.Fill = Brush(Colors.Crimson);
+                StatusIndicator.Fill  = Brush(Colors.Crimson);
                 StatusText.Text       = _strings.GetString("Status_Error");
                 ToggleButtonText.Text = _strings.GetString("Button_Start");
-                DetailText.Text       = _controller.LastError ?? string.Empty;
+                DetailText.Text       = FaultMessage();
                 _embedder.Stop();
                 break;
         }
+
+        // Bildschirm und System nur waehrend einer laufenden Uebertragung wachhalten.
+        // Muss vom UI-Thread kommen — SetThreadExecutionState wirkt pro Thread.
+        KeepAwake.Set(state == UxPlayState.Streaming);
     }
+
+    /// <summary>
+    /// Uebersetzt die klassifizierte Fehlerursache in einen handlungsanweisenden Text.
+    /// Ohne erkannte Ursache bleibt der uxplay-Rohtext als letzte Rueckfallebene.
+    /// </summary>
+    private string FaultMessage() => _controller.Fault switch
+    {
+        UxPlayFault.DiscoveryBlocked => _strings.GetString("Error_DiscoveryBlocked"),
+        UxPlayFault.NameConflict     => string.Format(_strings.GetString("Error_NameConflict"), _settings.DeviceName),
+        UxPlayFault.PortBusy         => _strings.GetString("Error_PortBusy"),
+        UxPlayFault.NetworkDropped   => _strings.GetString("Warn_NetworkDropped"),
+        _                            => _controller.LastError ?? string.Empty,
+    };
 
     private static string GetAppVersion()
     {
