@@ -27,7 +27,13 @@ public sealed class VideoEmbedder
     public event EventHandler? EscapePressed;
     public event EventHandler? FullscreenTogglePressed;
 
-    public bool HasEmbedded => _embedded != IntPtr.Zero;
+    /// <summary>
+    /// true nur, wenn wir ein Fenster eingebettet haben UND es noch existiert.
+    /// Die IsWindow-Pruefung ist wichtig: Stirbt die GStreamer-Sitzung, bleibt der
+    /// Zeiger stehen, obwohl das Fenster weg ist. Ohne die Pruefung meldet die App
+    /// weiter "alles gut", waehrend beim Nutzer nichts mehr ankommt.
+    /// </summary>
+    public bool HasEmbedded => _embedded != IntPtr.Zero && Native.IsWindow(_embedded);
 
     public VideoEmbedder(IntPtr appHwnd, DispatcherQueue dispatcher)
     {

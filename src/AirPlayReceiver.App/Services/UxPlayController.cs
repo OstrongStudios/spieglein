@@ -731,13 +731,24 @@ public sealed class UxPlayController : IDisposable
         //     Firewall-Regel und die UxPlay-Doku sagt ausdruecklich, dass es
         //     mit laufender Firewall dann nicht funktioniert. Muss zu den
         //     Regeln in Package.appxmanifest passen.
-        // -vs autovideosink: Standard. -vs 0 = audio only (kein Video-Fenster).
+        // -vs d3d11videosink: BEWUSST nicht autovideosink.
+        //     autovideosink waehlt auf Windows den D3D12-Sink. Der braucht ein
+        //     D3D12-faehiges Geraet und scheitert still, wenn keines da ist: Es
+        //     entsteht gar kein Fenster, die Videopipeline stirbt, der Ton laeuft
+        //     weiter. Auf einer Hyper-V-VM (Windows 10 22H2, nur "Microsoft Hyper-V
+        //     Video") direkt gemessen — mit d3d11videosink erscheint ein Fenster und
+        //     es wird gerendert, mit autovideosink/d3d12videosink nie.
+        //     D3D11 gibt es auf jedem Windows 10/11 und es hat mit WARP einen
+        //     Software-Rasterizer als Rueckfallebene. Betrifft ausser VMs auch
+        //     Remotedesktop-Sitzungen und Rechner mit schwacher Grafik.
+        //     Die Warnung von hier bleibt fuer den Fall, dass auch das scheitert.
+        // -vs 0 = audio only (kein Video-Fenster).
         // -nh: kein "@hostname"-Suffix am AirPlay-Namen.
         // -n <name>: Geraetename.
         // -pin <1234>: 4-stelliger statischer Pincode (Leerzeichen ist Pflicht).
         var args = new System.Text.StringBuilder();
         args.Append("-p ");
-        args.Append(Settings.AudioOnly ? "-vs 0" : "-vs autovideosink");
+        args.Append(Settings.AudioOnly ? "-vs 0" : "-vs d3d11videosink");
 
         var name = SanitizeDeviceName(Settings.DeviceName);
         if (!string.IsNullOrWhiteSpace(name))

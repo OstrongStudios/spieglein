@@ -384,11 +384,22 @@ public sealed partial class MainWindow : Window
         }
     }
 
+    /// <summary>
+    /// Sperrt die Bedienelemente waehrend eines Start/Stop-Vorgangs.
+    ///
+    /// Die beiden Protokollzeilen sind Absicht: Sie machen im Log sichtbar, ob ein
+    /// Vorgang sauber zurueckkehrt. Auf einer Test-VM sah es einmal so aus, als
+    /// wuerde der Button Klicks schlucken — die Ursache war am Ende die
+    /// RDP-Fokusverwaltung der erweiterten Sitzung, nicht die App. Mit diesen
+    /// Zeilen laesst sich das beim naechsten Mal in einer Minute unterscheiden,
+    /// statt in einer Stunde.
+    /// </summary>
     private void BeginTransition()
     {
         _transitioning         = true;
         ToggleButton.IsEnabled = false;
         MenuSettings.IsEnabled = false;
+        _controller.AppendLog($"[ui] Uebergang gesperrt ({DateTime.Now:HH:mm:ss.fff})");
     }
 
     private void EndTransition()
@@ -396,6 +407,7 @@ public sealed partial class MainWindow : Window
         _transitioning         = false;
         ToggleButton.IsEnabled = true;
         MenuSettings.IsEnabled = true;
+        _controller.AppendLog($"[ui] Uebergang frei ({DateTime.Now:HH:mm:ss.fff})");
     }
 
     private void VideoHost_SizeChanged(object sender, SizeChangedEventArgs e) => UpdateEmbeddedBounds();
