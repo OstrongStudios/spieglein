@@ -3,7 +3,15 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
-    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <!-- ACHTUNG: Dieser Wert landet als MinVersion im GEBAUTEN AppxManifest und
+         ueberschreibt das, was in Package.appxmanifest steht. Stand bis 1.0.5.0 auf
+         17763 (Windows 10 1809) — dadurch liess sich das Paket dort installieren,
+         obwohl es gegen 19041 gebaut ist. Ergebnis auf solchen Rechnern:
+         STOWED_EXCEPTION_80040154 (REGDB_E_CLASSNOTREG) in
+         Microsoft.UI.Xaml.dll!DirectUI::FrameworkApplication::StartDesktop,
+         also Absturz beim Start, bevor ein Fenster erscheint.
+         Muss zu TargetFramework und zur Store-Angabe passen. -->
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
     <RootNamespace>AirPlayReceiver.App</RootNamespace>
     <AssemblyName>AirPlayReceiver.App</AssemblyName>
     <ApplicationManifest>app.manifest</ApplicationManifest>
