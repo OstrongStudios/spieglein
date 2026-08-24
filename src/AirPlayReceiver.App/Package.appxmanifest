@@ -9,7 +9,7 @@
     <Identity
         Name="4663Ostronggames.Spieglein"
         Publisher="CN=654B9AD8-3E71-4D00-B420-E162C13CD666"
-        Version="1.0.5.0"
+        Version="1.0.6.0"
         ProcessorArchitecture="x64" />
 
     <Properties>
