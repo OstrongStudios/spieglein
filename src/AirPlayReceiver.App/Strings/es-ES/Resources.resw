@@ -76,4 +76,6 @@
 
 Esto ocurre cuando no hay salida de vídeo o de audio disponible: por ejemplo, en una máquina virtual, a través de Escritorio remoto o con el dispositivo de audio desactivado. Comprueba el controlador gráfico y la salida de audio.</value></data>
 
+  <data name="Warn_NoAudioDevice"><value>Nota: este PC no tiene salida de audio. Por eso la duplicación funciona sin sonido; la imagen no se ve afectada.</value></data>
+
 </root>

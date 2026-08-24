@@ -76,4 +76,6 @@
 
 Cela se produit lorsqu’aucune sortie vidéo ou audio n’est disponible – par exemple dans une machine virtuelle, via le Bureau à distance, ou lorsque le périphérique audio est désactivé. Vérifiez le pilote graphique et la sortie audio.</value></data>
 
+  <data name="Warn_NoAudioDevice"><value>Remarque : ce PC n’a pas de sortie audio. La recopie fonctionne donc sans son – l’image n’est pas affectée.</value></data>
+
 </root>

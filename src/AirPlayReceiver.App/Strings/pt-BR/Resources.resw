@@ -76,4 +76,6 @@
 
 Isso acontece quando não há saída de vídeo ou de áudio disponível – por exemplo, em uma máquina virtual, via Área de Trabalho Remota ou com o dispositivo de áudio desativado. Verifique o driver gráfico e a saída de áudio.</value></data>
 
+  <data name="Warn_NoAudioDevice"><value>Observação: este PC não tem saída de áudio. Por isso o espelhamento funciona sem som – a imagem não é afetada.</value></data>
+
 </root>

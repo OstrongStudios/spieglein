@@ -76,4 +76,6 @@
 
 This happens when no display or audio output is available – for example in a virtual machine, over Remote Desktop, or with the audio device disabled. Please check your graphics driver and audio output.</value></data>
 
+  <data name="Warn_NoAudioDevice"><value>Note: this PC has no audio output. Mirroring therefore runs without sound – the picture is unaffected.</value></data>
+
 </root>

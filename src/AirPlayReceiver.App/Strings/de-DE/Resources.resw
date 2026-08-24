@@ -76,4 +76,6 @@
 
 Das passiert, wenn keine Grafik- oder Audioausgabe verfügbar ist – etwa in einer virtuellen Maschine, über Remotedesktop oder bei deaktiviertem Audiogerät. Bitte Grafiktreiber und Audioausgabe prüfen.</value></data>
 
+  <data name="Warn_NoAudioDevice"><value>Hinweis: Dieser PC hat keine Audioausgabe. Die Übertragung läuft deshalb ohne Ton – das Bild ist davon nicht betroffen.</value></data>
+
 </root>

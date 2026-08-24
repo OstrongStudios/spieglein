@@ -82,6 +82,39 @@ public sealed class UxPlayController : IDisposable
     /// <summary>Die Waisensuche laeuft nur beim ersten Start eines Programmlaufs.</summary>
     private bool _leftoversChecked;
 
+    /// <summary>
+    /// false, wenn das System keine Audioausgabe hat. Dann startet uxplay mit
+    /// "-as 0" und laesst den Ton komplett weg.
+    /// </summary>
+    public bool AudioOutputAvailable { get; private set; } = true;
+
+    /// <summary>
+    /// Prueft, ob es ueberhaupt ein Wiedergabegeraet gibt.
+    ///
+    /// Warum das noetig ist: Fehlt die Audioausgabe, kann GStreamer die Audio-
+    /// Pipeline nicht aufbauen, und uxplay bleibt mitten in der AirPlay-Aushandlung
+    /// stehen — das iPhone haengt auf "Connecting" und es kommt auch KEIN BILD.
+    /// Eine fehlende Soundkarte reisst also die komplette Uebertragung mit.
+    /// Beobachtet auf einer Hyper-V-VM und auf einem Laptop, bei dem Audio im
+    /// BIOS abgeschaltet war. Mit "-as 0" laeuft die Bilduebertragung weiter.
+    ///
+    /// Im Zweifel wird "vorhanden" angenommen: Lieber der bisherige Weg als eine
+    /// Fehlerkennung, die allen Nutzern den Ton abdreht.
+    /// </summary>
+    private static async Task<bool> HasAudioOutputAsync()
+    {
+        try
+        {
+            var geraete = await Windows.Devices.Enumeration.DeviceInformation
+                .FindAllAsync(Windows.Devices.Enumeration.DeviceClass.AudioRender);
+            return geraete.Count > 0;
+        }
+        catch
+        {
+            return true;
+        }
+    }
+
     /// <summary>Bricht die Startueberwachung ab, wenn vorher gestoppt wird.</summary>
     private CancellationTokenSource? _startupWatch;
 
@@ -232,6 +265,12 @@ public sealed class UxPlayController : IDisposable
                 _leftoversChecked = true;
                 KillLeftoversFrom(uxplayDir);
             }
+
+            // Vor dem Bauen der Argumente pruefen, ob es eine Audioausgabe gibt.
+            AudioOutputAvailable = await HasAudioOutputAsync().ConfigureAwait(false);
+            if (!AudioOutputAvailable)
+                WriteLog("Kein Wiedergabegeraet gefunden — uxplay startet mit '-as 0', also ohne Ton. " +
+                         "Ohne das bliebe auch das Bild aus.");
 
             // Eigenen mDNSResponder.exe -server starten, falls noch kein
             // Bonjour-Daemon laeuft. Bietet den Named-Pipe-Endpoint, an den
@@ -749,6 +788,11 @@ public sealed class UxPlayController : IDisposable
         var args = new System.Text.StringBuilder();
         args.Append("-p ");
         args.Append(Settings.AudioOnly ? "-vs 0" : "-vs d3d11videosink");
+
+        // -as 0: Ton komplett abschalten, wenn das System keine Wiedergabe hat.
+        // Sonst scheitert der Aufbau der Audio-Pipeline und nimmt die Bild-
+        // uebertragung mit — siehe HasAudioOutputAsync.
+        if (!AudioOutputAvailable && !Settings.AudioOnly) args.Append(" -as 0");
 
         var name = SanitizeDeviceName(Settings.DeviceName);
         if (!string.IsNullOrWhiteSpace(name))

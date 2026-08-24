@@ -470,18 +470,18 @@ public sealed partial class MainWindow : Window
                 ToggleButtonText.Text = _strings.GetString("Button_Stop");
                 // Nach einem Verbindungsabbruch den Grund zeigen statt der Anleitung,
                 // die der Nutzer gerade erfolgreich befolgt hatte.
-                DetailText.Text       = _controller.Fault == UxPlayFault.NetworkDropped
+                DetailText.Text       = WithAudioHint(_controller.Fault == UxPlayFault.NetworkDropped
                     ? _strings.GetString("Warn_NetworkDropped")
-                    : string.Format(_strings.GetString("Detail_Ready"), _settings.DeviceName);
+                    : string.Format(_strings.GetString("Detail_Ready"), _settings.DeviceName));
                 break;
 
             case UxPlayState.Streaming:
                 StatusIndicator.Fill  = Brush(Colors.DodgerBlue);
                 StatusText.Text       = _strings.GetString("Status_Streaming");
                 ToggleButtonText.Text = _strings.GetString("Button_Stop");
-                DetailText.Text       = !string.IsNullOrWhiteSpace(_controller.ConnectedDevice)
+                DetailText.Text       = WithAudioHint(!string.IsNullOrWhiteSpace(_controller.ConnectedDevice)
                     ? string.Format(_strings.GetString("Detail_Streaming_With"), _controller.ConnectedDevice)
-                    : _strings.GetString("Detail_Streaming");
+                    : _strings.GetString("Detail_Streaming"));
                 StartVideoWatch();
                 break;
 
@@ -543,6 +543,16 @@ public sealed partial class MainWindow : Window
         StatusIndicator.Fill = Brush(Colors.Goldenrod);
         DetailText.Text      = _strings.GetString("Warn_NoVideoOutput");
     }
+
+    /// <summary>
+    /// Haengt einen Hinweis an, wenn das System keine Audioausgabe hat. Die
+    /// Uebertragung laeuft dann bewusst ohne Ton — der Nutzer soll wissen, dass
+    /// das Absicht ist und nicht der naechste Fehler.
+    /// </summary>
+    private string WithAudioHint(string text)
+        => _controller.AudioOutputAvailable
+            ? text
+            : text + "\n\n" + _strings.GetString("Warn_NoAudioDevice");
 
     private string FaultMessage() => _controller.Fault switch
     {
