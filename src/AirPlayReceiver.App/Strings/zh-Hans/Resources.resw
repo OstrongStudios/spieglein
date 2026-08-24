@@ -72,4 +72,8 @@
   <data name="Error_PortBusy"><value>所需的网络端口已被占用。通常是仍有旧的 Spieglein 进程在后台运行 — 请注销后重新登录，或重启电脑。</value></data>
   <data name="Warn_NetworkDropped"><value>与设备的连接已断开（Wi-Fi 问题？）。Spieglein 正在等待新的连接。</value></data>
 
+  <data name="Warn_NoVideoOutput"><value>连接已建立，但没有画面传入。
+
+当没有可用的显示或音频输出时会出现这种情况 — 例如在虚拟机中、通过远程桌面，或音频设备被禁用。请检查显卡驱动和音频输出。</value></data>
+
 </root>

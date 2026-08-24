@@ -72,4 +72,8 @@
   <data name="Error_PortBusy"><value>A required network port is in use. Usually an older Spieglein session is still running in the background — sign out and back in, or restart your PC.</value></data>
   <data name="Warn_NetworkDropped"><value>Lost the connection to your device (Wi-Fi problem?). Spieglein is waiting for a new connection.</value></data>
 
+  <data name="Warn_NoVideoOutput"><value>The connection is established, but no picture is coming through.
+
+This happens when no display or audio output is available – for example in a virtual machine, over Remote Desktop, or with the audio device disabled. Please check your graphics driver and audio output.</value></data>
+
 </root>

@@ -72,4 +72,8 @@
   <data name="Error_PortBusy"><value>Ein benötigter Netzwerk-Port ist belegt. Meist läuft noch eine ältere Spieglein-Sitzung im Hintergrund – melde dich ab und wieder an oder starte den PC neu.</value></data>
   <data name="Warn_NetworkDropped"><value>Verbindung zum Gerät verloren (WLAN-Problem?). Spieglein wartet auf eine neue Verbindung.</value></data>
 
+  <data name="Warn_NoVideoOutput"><value>Die Verbindung steht, aber es kommt kein Bild an.
+
+Das passiert, wenn keine Grafik- oder Audioausgabe verfügbar ist – etwa in einer virtuellen Maschine, über Remotedesktop oder bei deaktiviertem Audiogerät. Bitte Grafiktreiber und Audioausgabe prüfen.</value></data>
+
 </root>

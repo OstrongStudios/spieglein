@@ -27,6 +27,19 @@ public sealed partial class MainWindow : Window
     /// <summary>Sperre gegen ueberlappende Start/Stop-Vorgaenge (Button, Tray, Einstellungen).</summary>
     private bool _transitioning;
 
+    /// <summary>
+    /// Ueberwacht, ob nach dem Verbindungsaufbau tatsaechlich ein Videofenster
+    /// erscheint. Siehe <see cref="StartVideoWatch"/>.
+    /// </summary>
+    private Microsoft.UI.Dispatching.DispatcherQueueTimer? _videoWatch;
+
+    /// <summary>
+    /// Frist, in der nach dem Wechsel auf "Aktive Verbindung" ein Videofenster
+    /// aufgetaucht sein muss. Grosszuegig, weil das erste Bild bei langsamen
+    /// Rechnern dauern kann — es geht nur darum, den Totalausfall zu erkennen.
+    /// </summary>
+    private static readonly TimeSpan VideoWatchDelay = TimeSpan.FromSeconds(20);
+
     public MainWindow()
     {
         InitializeComponent();
@@ -58,7 +71,12 @@ public sealed partial class MainWindow : Window
             DispatcherQueue.TryEnqueue(() =>
             {
                 IdleHint.Visibility = _embedder.HasEmbedded ? Visibility.Collapsed : Visibility.Visible;
-                if (_embedder.HasEmbedded) UpdateEmbeddedBounds();
+                if (_embedder.HasEmbedded)
+                {
+                    // Bild ist da — die Ausfallwarnung ist damit gegenstandslos.
+                    StopVideoWatch();
+                    UpdateEmbeddedBounds();
+                }
             });
         _embedder.EscapePressed += (_, _) =>
             DispatcherQueue.TryEnqueue(() => { if (_isFullscreen) SetFullscreen(false); });
@@ -452,6 +470,7 @@ public sealed partial class MainWindow : Window
                 DetailText.Text       = !string.IsNullOrWhiteSpace(_controller.ConnectedDevice)
                     ? string.Format(_strings.GetString("Detail_Streaming_With"), _controller.ConnectedDevice)
                     : _strings.GetString("Detail_Streaming");
+                StartVideoWatch();
                 break;
 
             case UxPlayState.Error:
@@ -463,6 +482,9 @@ public sealed partial class MainWindow : Window
                 break;
         }
 
+        // Bildueberwachung laeuft nur waehrend einer aktiven Verbindung.
+        if (state != UxPlayState.Streaming) StopVideoWatch();
+
         // Bildschirm und System nur waehrend einer laufenden Uebertragung wachhalten.
         // Muss vom UI-Thread kommen — SetThreadExecutionState wirkt pro Thread.
         KeepAwake.Set(state == UxPlayState.Streaming);
@@ -472,6 +494,44 @@ public sealed partial class MainWindow : Window
     /// Uebersetzt die klassifizierte Fehlerursache in einen handlungsanweisenden Text.
     /// Ohne erkannte Ursache bleibt der uxplay-Rohtext als letzte Rueckfallebene.
     /// </summary>
+    /// <summary>
+    /// Startet die Ueberwachung der Bildausgabe. Hintergrund: uxplay nimmt die
+    /// Verbindung an und meldet "Begin streaming to GStreamer video pipeline",
+    /// aber wenn danach die Pipeline nicht hochkommt, erfaehrt die App davon
+    /// nichts — sie zeigt weiter "Aktive Verbindung" in Blau, waehrend beim
+    /// Nutzer nichts ankommt.
+    ///
+    /// Beobachtet auf einer Hyper-V-VM ohne Audiogeraet: Die Sitzung wird nie
+    /// fertig ausgehandelt, das iPhone haengt auf "Connecting", das Bild bleibt
+    /// beim ersten Frame stehen. Dasselbe trifft echte Nutzer ohne funktionierende
+    /// Audio- oder Grafikausgabe.
+    /// </summary>
+    private void StartVideoWatch()
+    {
+        // Im Audio-Only-Modus entsteht bewusst kein Videofenster.
+        if (_settings.AudioOnly) return;
+
+        _videoWatch ??= DispatcherQueue.CreateTimer();
+        _videoWatch.Interval    = VideoWatchDelay;
+        _videoWatch.IsRepeating = false;
+        _videoWatch.Tick -= OnVideoWatchTick;
+        _videoWatch.Tick += OnVideoWatchTick;
+        _videoWatch.Start();
+    }
+
+    private void StopVideoWatch() => _videoWatch?.Stop();
+
+    private void OnVideoWatchTick(Microsoft.UI.Dispatching.DispatcherQueueTimer sender, object args)
+    {
+        sender.Stop();
+        if (_controller.State != UxPlayState.Streaming) return;
+        if (_embedder.HasEmbedded) return;
+
+        // Verbindung steht, aber es kam nie ein Bild an.
+        StatusIndicator.Fill = Brush(Colors.Goldenrod);
+        DetailText.Text      = _strings.GetString("Warn_NoVideoOutput");
+    }
+
     private string FaultMessage() => _controller.Fault switch
     {
         UxPlayFault.DiscoveryBlocked => _strings.GetString("Error_DiscoveryBlocked"),

@@ -72,4 +72,8 @@
   <data name="Error_PortBusy"><value>Uma porta de rede necessária está ocupada. Normalmente há uma sessão antiga do Spieglein ainda em segundo plano — saia e entre novamente, ou reinicie o PC.</value></data>
   <data name="Warn_NetworkDropped"><value>Conexão com o dispositivo perdida (problema de Wi-Fi?). O Spieglein aguarda uma nova conexão.</value></data>
 
+  <data name="Warn_NoVideoOutput"><value>A conexão foi estabelecida, mas nenhuma imagem está chegando.
+
+Isso acontece quando não há saída de vídeo ou de áudio disponível – por exemplo, em uma máquina virtual, via Área de Trabalho Remota ou com o dispositivo de áudio desativado. Verifique o driver gráfico e a saída de áudio.</value></data>
+
 </root>
