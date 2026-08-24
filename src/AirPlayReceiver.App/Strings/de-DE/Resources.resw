@@ -27,7 +27,6 @@
   <data name="Tooltip_Fullscreen"><value>Vollbild (Alt+Enter)</value></data>
   <data name="Tooltip_More"><value>Mehr</value></data>
   <data name="Menu_Settings"><value>Einstellungen…</value></data>
-  <data name="Menu_Log"><value>Log öffnen</value></data>
   <data name="Menu_Coffee"><value>Kaffee spendieren</value></data>
   <data name="Menu_About"><value>Über Spieglein</value></data>
 
@@ -53,8 +52,6 @@
   <data name="Restart_Yes"><value>Neu starten</value></data>
   <data name="Restart_No"><value>Später</value></data>
 
-  <data name="Log_Copy"><value>In Zwischenablage kopieren</value></data>
-  <data name="Log_OpenFolder"><value>Ordner öffnen</value></data>
 
   <data name="About_Body"><value>Spieglein — kostenloser Empfänger zum Spiegeln deines iPhones, iPads oder Macs auf Windows. „Spieglein, Spieglein an der Wand …"&#x000A;Basiert auf UxPlay (GPLv3) und Apples Open-Source-mDNSResponder (Apache-2.0).&#x000A;&#x000A;Nicht von Apple Inc. AirPlay ist eine Marke von Apple Inc.</value></data>
   <data name="About_SourceLabel"><value>Quellcode:</value></data>
@@ -74,8 +71,8 @@
 
   <data name="Warn_NoVideoOutput"><value>Die Verbindung steht, aber es kommt kein Bild an.
 
-Das passiert, wenn keine Grafik- oder Audioausgabe verfügbar ist – etwa in einer virtuellen Maschine, über Remotedesktop oder bei deaktiviertem Audiogerät. Bitte Grafiktreiber und Audioausgabe prüfen.</value></data>
+Meist fehlt eine funktionierende Grafik- oder Audioausgabe – etwa in einer virtuellen Maschine, über Remotedesktop oder bei abgeschaltetem Audiogerät. Prüf bitte Grafiktreiber und Audioausgabe.</value></data>
 
-  <data name="Warn_NoAudioDevice"><value>Hinweis: Dieser PC hat keine Audioausgabe. Die Übertragung läuft deshalb ohne Ton – das Bild ist davon nicht betroffen.</value></data>
+  <data name="Warn_NoAudioDevice"><value>Dieser PC hat keine Audioausgabe – die Übertragung läuft deshalb ohne Ton. Das Bild ist davon nicht betroffen.</value></data>
 
 </root>

@@ -27,7 +27,6 @@
   <data name="Tooltip_Fullscreen"><value>全屏（Alt+Enter）</value></data>
   <data name="Tooltip_More"><value>更多</value></data>
   <data name="Menu_Settings"><value>设置…</value></data>
-  <data name="Menu_Log"><value>查看日志</value></data>
   <data name="Menu_Coffee"><value>请我喝杯咖啡</value></data>
   <data name="Menu_About"><value>关于 Spieglein</value></data>
 
@@ -53,8 +52,6 @@
   <data name="Restart_Yes"><value>重新启动</value></data>
   <data name="Restart_No"><value>稍后</value></data>
 
-  <data name="Log_Copy"><value>复制到剪贴板</value></data>
-  <data name="Log_OpenFolder"><value>打开文件夹</value></data>
 
   <data name="About_Body"><value>Spieglein — 免费的接收端，可将 iPhone、iPad 或 Mac 的画面镜像到 Windows。名称取自德语，意为“小镜子”，出自童话《白雪公主》中的“魔镜魔镜，谁是世界上最美的人？”&#x000A;基于 UxPlay（GPLv3）与 Apple 的开源项目 mDNSResponder（Apache 2.0）。&#x000A;&#x000A;本应用与 Apple Inc. 无关。AirPlay 是 Apple Inc. 的商标。</value></data>
   <data name="About_SourceLabel"><value>源代码：</value></data>
@@ -72,10 +69,10 @@
   <data name="Error_PortBusy"><value>所需的网络端口已被占用。通常是仍有旧的 Spieglein 进程在后台运行 — 请注销后重新登录，或重启电脑。</value></data>
   <data name="Warn_NetworkDropped"><value>与设备的连接已断开（Wi-Fi 问题？）。Spieglein 正在等待新的连接。</value></data>
 
-  <data name="Warn_NoVideoOutput"><value>连接已建立，但没有画面传入。
+  <data name="Warn_NoVideoOutput"><value>已连接，但没有画面传入。
 
-当没有可用的显示或音频输出时会出现这种情况 — 例如在虚拟机中、通过远程桌面，或音频设备被禁用。请检查显卡驱动和音频输出。</value></data>
+通常是缺少可用的显示或音频输出，例如在虚拟机中、通过远程桌面，或音频设备已关闭。请检查显卡驱动和音频输出。</value></data>
 
-  <data name="Warn_NoAudioDevice"><value>提示：此电脑没有音频输出，因此投屏将无声进行 — 画面不受影响。</value></data>
+  <data name="Warn_NoAudioDevice"><value>此电脑没有音频输出，因此投屏没有声音。画面不受影响。</value></data>
 
 </root>

@@ -27,7 +27,6 @@
   <data name="Tooltip_Fullscreen"><value>Plein écran (Alt+Entrée)</value></data>
   <data name="Tooltip_More"><value>Plus</value></data>
   <data name="Menu_Settings"><value>Réglages…</value></data>
-  <data name="Menu_Log"><value>Afficher le journal</value></data>
   <data name="Menu_Coffee"><value>Offrez-moi un café</value></data>
   <data name="Menu_About"><value>À propos de Spieglein</value></data>
 
@@ -53,8 +52,6 @@
   <data name="Restart_Yes"><value>Redémarrer</value></data>
   <data name="Restart_No"><value>Plus tard</value></data>
 
-  <data name="Log_Copy"><value>Copier dans le presse-papiers</value></data>
-  <data name="Log_OpenFolder"><value>Ouvrir le dossier</value></data>
 
   <data name="About_Body"><value>Spieglein — récepteur gratuit pour recopier l’écran de votre iPhone, iPad ou Mac sur Windows. Le nom est allemand et signifie « petit miroir », d’après le conte : « Miroir, mon beau miroir, qui est la plus belle ? »&#x000A;Basé sur UxPlay (GPLv3) et sur mDNSResponder d’Apple, en open source (Apache 2.0).&#x000A;&#x000A;Sans lien avec Apple Inc. AirPlay est une marque déposée d’Apple Inc.</value></data>
   <data name="About_SourceLabel"><value>Code source :</value></data>
@@ -74,8 +71,8 @@
 
   <data name="Warn_NoVideoOutput"><value>La connexion est établie, mais aucune image n’arrive.
 
-Cela se produit lorsqu’aucune sortie vidéo ou audio n’est disponible – par exemple dans une machine virtuelle, via le Bureau à distance, ou lorsque le périphérique audio est désactivé. Vérifiez le pilote graphique et la sortie audio.</value></data>
+Il manque généralement une sortie vidéo ou audio opérationnelle : machine virtuelle, Bureau à distance, ou périphérique audio désactivé. Vérifiez le pilote graphique et la sortie audio.</value></data>
 
-  <data name="Warn_NoAudioDevice"><value>Remarque : ce PC n’a pas de sortie audio. La recopie fonctionne donc sans son – l’image n’est pas affectée.</value></data>
+  <data name="Warn_NoAudioDevice"><value>Ce PC n’a pas de sortie audio : la recopie se fait donc sans son. L’image, elle, n’est pas affectée.</value></data>
 
 </root>

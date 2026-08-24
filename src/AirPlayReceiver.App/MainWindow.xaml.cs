@@ -147,7 +147,6 @@ public sealed partial class MainWindow : Window
         ToolTipService.SetToolTip(FullscreenButton, _strings.GetString("Tooltip_Fullscreen"));
         ToolTipService.SetToolTip(MoreButton,        _strings.GetString("Tooltip_More"));
         MenuSettings.Text = _strings.GetString("Menu_Settings");
-        MenuLog.Text      = _strings.GetString("Menu_Log");
         MenuCoffee.Text   = _strings.GetString("Menu_Coffee");
         MenuAbout.Text    = _strings.GetString("Menu_About");
     }
@@ -252,64 +251,6 @@ public sealed partial class MainWindow : Window
             });
         }
         catch { /* kein Browser verfuegbar — dann passiert eben nichts */ }
-    }
-
-    private async void MenuLog_Click(object sender, RoutedEventArgs e)
-    {
-        var logPath = _controller.LogPath;
-        var dir = System.IO.Path.GetDirectoryName(logPath)!;
-        System.IO.Directory.CreateDirectory(dir);
-
-        string content;
-        try { content = System.IO.File.Exists(logPath) ? System.IO.File.ReadAllText(logPath) : string.Empty; }
-        catch (System.Exception ex) { content = $"<read error: {ex.Message}>"; }
-        if (string.IsNullOrEmpty(content)) content = "(empty)";
-
-        var textBox = new TextBox
-        {
-            Text                = content,
-            IsReadOnly          = true,
-            AcceptsReturn       = true,
-            TextWrapping        = TextWrapping.NoWrap,
-            FontFamily          = new Microsoft.UI.Xaml.Media.FontFamily("Consolas"),
-            FontSize            = 12,
-            Height              = 420,
-            MinWidth            = 720,
-        };
-        ScrollViewer.SetHorizontalScrollBarVisibility(textBox, ScrollBarVisibility.Auto);
-        ScrollViewer.SetVerticalScrollBarVisibility(textBox, ScrollBarVisibility.Auto);
-
-        var dlg = new ContentDialog
-        {
-            XamlRoot            = this.Content.XamlRoot,
-            Title               = _strings.GetString("Menu_Log"),
-            Content             = textBox,
-            CloseButtonText     = _strings.GetString("About_Ok"),
-            PrimaryButtonText   = _strings.GetString("Log_Copy"),
-            SecondaryButtonText = _strings.GetString("Log_OpenFolder"),
-            DefaultButton       = ContentDialogButton.Close,
-        };
-        // Default-Maxwidth umgehen, sodass der Log nicht in eine schmale Spalte gequetscht wird.
-        dlg.Resources["ContentDialogMaxWidth"] = 1100.0;
-
-        dlg.PrimaryButtonClick   += (_, args) =>
-        {
-            args.Cancel = true; // Dialog offen lassen nach Copy
-            var dp = new Windows.ApplicationModel.DataTransfer.DataPackage();
-            dp.SetText(content);
-            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dp);
-        };
-        dlg.SecondaryButtonClick += (_, args) =>
-        {
-            args.Cancel = true; // Dialog offen lassen
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-            {
-                FileName        = dir,
-                UseShellExecute = true,
-            });
-        };
-
-        await ShowDialogSafelyAsync(dlg);
     }
 
     private async void MenuAbout_Click(object sender, RoutedEventArgs e)

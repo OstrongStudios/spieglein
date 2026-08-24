@@ -27,7 +27,6 @@
   <data name="Tooltip_Fullscreen"><value>Pantalla completa (Alt+Intro)</value></data>
   <data name="Tooltip_More"><value>Más</value></data>
   <data name="Menu_Settings"><value>Ajustes…</value></data>
-  <data name="Menu_Log"><value>Ver registro</value></data>
   <data name="Menu_Coffee"><value>Invítame a un café</value></data>
   <data name="Menu_About"><value>Acerca de Spieglein</value></data>
 
@@ -53,8 +52,6 @@
   <data name="Restart_Yes"><value>Reiniciar</value></data>
   <data name="Restart_No"><value>Más tarde</value></data>
 
-  <data name="Log_Copy"><value>Copiar al portapapeles</value></data>
-  <data name="Log_OpenFolder"><value>Abrir carpeta</value></data>
 
   <data name="About_Body"><value>Spieglein — receptor gratuito para duplicar la pantalla de tu iPhone, iPad o Mac en Windows. El nombre es alemán y significa «espejito», por el cuento: «Espejito, espejito, ¿quién es la más bella?»&#x000A;Basado en UxPlay (GPLv3) y en mDNSResponder de Apple, de código abierto (Apache 2.0).&#x000A;&#x000A;Sin relación con Apple Inc. AirPlay es una marca comercial de Apple Inc.</value></data>
   <data name="About_SourceLabel"><value>Código fuente:</value></data>
@@ -72,10 +69,10 @@
   <data name="Error_PortBusy"><value>Un puerto de red necesario está ocupado. Normalmente queda una sesión anterior de Spieglein en segundo plano: cierra sesión y vuelve a entrar, o reinicia el PC.</value></data>
   <data name="Warn_NetworkDropped"><value>Se perdió la conexión con el dispositivo (¿problema de wifi?). Spieglein espera una nueva conexión.</value></data>
 
-  <data name="Warn_NoVideoOutput"><value>La conexión está establecida, pero no llega ninguna imagen.
+  <data name="Warn_NoVideoOutput"><value>Hay conexión, pero no llega imagen.
 
-Esto ocurre cuando no hay salida de vídeo o de audio disponible: por ejemplo, en una máquina virtual, a través de Escritorio remoto o con el dispositivo de audio desactivado. Comprueba el controlador gráfico y la salida de audio.</value></data>
+Normalmente falta una salida de vídeo o de audio que funcione: por ejemplo en una máquina virtual, por Escritorio remoto o con el dispositivo de audio apagado. Revisa el controlador gráfico y la salida de audio.</value></data>
 
-  <data name="Warn_NoAudioDevice"><value>Nota: este PC no tiene salida de audio. Por eso la duplicación funciona sin sonido; la imagen no se ve afectada.</value></data>
+  <data name="Warn_NoAudioDevice"><value>Este PC no tiene salida de audio, así que la duplicación se ve sin sonido. La imagen no se ve afectada.</value></data>
 
 </root>

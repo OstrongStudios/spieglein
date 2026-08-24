@@ -61,9 +61,6 @@
                         <MenuFlyoutItem x:Name="MenuSettings" Text="Einstellungen…" Click="MenuSettings_Click">
                             <MenuFlyoutItem.Icon><SymbolIcon Symbol="Setting"/></MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem x:Name="MenuLog" Text="Log öffnen" Click="MenuLog_Click">
-                            <MenuFlyoutItem.Icon><SymbolIcon Symbol="Document"/></MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
                         <MenuFlyoutSeparator/>
                         <MenuFlyoutItem x:Name="MenuCoffee" Text="Kaffee spendieren" Click="MenuCoffee_Click">
                             <MenuFlyoutItem.Icon>

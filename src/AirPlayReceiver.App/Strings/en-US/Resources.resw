@@ -27,7 +27,6 @@
   <data name="Tooltip_Fullscreen"><value>Fullscreen (Alt+Enter)</value></data>
   <data name="Tooltip_More"><value>More</value></data>
   <data name="Menu_Settings"><value>Settings…</value></data>
-  <data name="Menu_Log"><value>Open log</value></data>
   <data name="Menu_Coffee"><value>Buy me a coffee</value></data>
   <data name="Menu_About"><value>About Spieglein</value></data>
 
@@ -53,8 +52,6 @@
   <data name="Restart_Yes"><value>Restart</value></data>
   <data name="Restart_No"><value>Later</value></data>
 
-  <data name="Log_Copy"><value>Copy to clipboard</value></data>
-  <data name="Log_OpenFolder"><value>Open folder</value></data>
 
   <data name="About_Body"><value>Spieglein — free receiver to mirror your iPhone, iPad or Mac to Windows. (German for "little mirror" — from the fairy-tale line "Mirror, mirror, on the wall…")&#x000A;Based on UxPlay (GPLv3) and Apple's open-source mDNSResponder (Apache-2.0).&#x000A;&#x000A;Not affiliated with Apple Inc. AirPlay is a trademark of Apple Inc.</value></data>
   <data name="About_SourceLabel"><value>Source code:</value></data>
@@ -72,10 +69,10 @@
   <data name="Error_PortBusy"><value>A required network port is in use. Usually an older Spieglein session is still running in the background — sign out and back in, or restart your PC.</value></data>
   <data name="Warn_NetworkDropped"><value>Lost the connection to your device (Wi-Fi problem?). Spieglein is waiting for a new connection.</value></data>
 
-  <data name="Warn_NoVideoOutput"><value>The connection is established, but no picture is coming through.
+  <data name="Warn_NoVideoOutput"><value>Connected, but no picture is coming through.
 
-This happens when no display or audio output is available – for example in a virtual machine, over Remote Desktop, or with the audio device disabled. Please check your graphics driver and audio output.</value></data>
+Usually this means there is no working display or audio output – for example in a virtual machine, over Remote Desktop, or with the audio device switched off. Check your graphics driver and audio output.</value></data>
 
-  <data name="Warn_NoAudioDevice"><value>Note: this PC has no audio output. Mirroring therefore runs without sound – the picture is unaffected.</value></data>
+  <data name="Warn_NoAudioDevice"><value>This PC has no audio output, so mirroring runs without sound. The picture itself is unaffected.</value></data>
 
 </root>

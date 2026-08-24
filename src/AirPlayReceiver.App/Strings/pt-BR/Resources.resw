@@ -27,7 +27,6 @@
   <data name="Tooltip_Fullscreen"><value>Tela cheia (Alt+Enter)</value></data>
   <data name="Tooltip_More"><value>Mais</value></data>
   <data name="Menu_Settings"><value>Ajustes…</value></data>
-  <data name="Menu_Log"><value>Ver registro</value></data>
   <data name="Menu_Coffee"><value>Pague-me um café</value></data>
   <data name="Menu_About"><value>Sobre o Spieglein</value></data>
 
@@ -53,8 +52,6 @@
   <data name="Restart_Yes"><value>Reiniciar</value></data>
   <data name="Restart_No"><value>Depois</value></data>
 
-  <data name="Log_Copy"><value>Copiar para a área de transferência</value></data>
-  <data name="Log_OpenFolder"><value>Abrir pasta</value></data>
 
   <data name="About_Body"><value>Spieglein — receptor gratuito para espelhar a tela do seu iPhone, iPad ou Mac no Windows. O nome é alemão e significa “espelhinho”, do conto: “Espelho, espelho meu, existe alguém mais bela do que eu?”&#x000A;Baseado no UxPlay (GPLv3) e no mDNSResponder da Apple, de código aberto (Apache 2.0).&#x000A;&#x000A;Sem vínculo com a Apple Inc. AirPlay é uma marca registrada da Apple Inc.</value></data>
   <data name="About_SourceLabel"><value>Código-fonte:</value></data>
@@ -72,10 +69,10 @@
   <data name="Error_PortBusy"><value>Uma porta de rede necessária está ocupada. Normalmente há uma sessão antiga do Spieglein ainda em segundo plano — saia e entre novamente, ou reinicie o PC.</value></data>
   <data name="Warn_NetworkDropped"><value>Conexão com o dispositivo perdida (problema de Wi-Fi?). O Spieglein aguarda uma nova conexão.</value></data>
 
-  <data name="Warn_NoVideoOutput"><value>A conexão foi estabelecida, mas nenhuma imagem está chegando.
+  <data name="Warn_NoVideoOutput"><value>Conectado, mas nenhuma imagem chega.
 
-Isso acontece quando não há saída de vídeo ou de áudio disponível – por exemplo, em uma máquina virtual, via Área de Trabalho Remota ou com o dispositivo de áudio desativado. Verifique o driver gráfico e a saída de áudio.</value></data>
+Geralmente falta uma saída de vídeo ou de áudio funcionando – por exemplo em uma máquina virtual, via Área de Trabalho Remota ou com o dispositivo de áudio desligado. Verifique o driver gráfico e a saída de áudio.</value></data>
 
-  <data name="Warn_NoAudioDevice"><value>Observação: este PC não tem saída de áudio. Por isso o espelhamento funciona sem som – a imagem não é afetada.</value></data>
+  <data name="Warn_NoAudioDevice"><value>Este PC não tem saída de áudio, então o espelhamento acontece sem som. A imagem não é afetada.</value></data>
 
 </root>
