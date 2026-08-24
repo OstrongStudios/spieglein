@@ -17,6 +17,8 @@
 - **Sleep-/Wake-Watchdog** — verbindet nach PC-Standby automatisch wieder
 - **Bildschirm bleibt an** während einer Übertragung — kein Standby mitten im Film
 - **Firewall-Freigabe ohne Nachfrage** — die Regeln stehen im MSIX-Manifest und werden bei der Installation angelegt
+- **Läuft auch ohne Audioausgabe** — dann eben ohne Ton, das Bild kommt trotzdem
+- **Auch auf älterer Grafik** — fester D3D11-Videosink statt `autovideosink`, damit Intel-Grafik ohne D3D12 (vor Haswell) mitspielt
 - **Verständliche Fehlermeldungen** statt stiller Ausfälle
 - **Mehrsprachig** — Deutsch, Englisch, Spanisch, Französisch, Portugiesisch, Chinesisch (vereinfacht)
 - **Lokal-only** — keine Cloud, kein Tracking, keine Telemetrie
