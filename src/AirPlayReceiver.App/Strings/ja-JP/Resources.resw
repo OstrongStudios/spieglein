@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="AppTitle"><value>Spieglein</value></data>
+  <data name="Status_Off"><value>AirPlay 受信オフ</value></data>
+  <data name="Status_Ready"><value>接続待機中</value></data>
+  <data name="Status_Streaming"><value>AirPlay 受信中</value></data>
+  <data name="Status_Error"><value>エラー</value></data>
+  <data name="Detail_Off"><value>「AirPlay を開始」で iPhone や iPad の画面をミラーリングできます。</value></data>
+  <data name="Detail_Off_LastDevice"><value>前回の接続：{0}</value></data>
+  <data name="Detail_Ready"><value>iPhone または iPad から接続する方法：
+1. コントロールセンターを開きます（画面の右上隅から下にスワイプ）
+2.「画面ミラーリング」（重なった長方形のアイコン）をタップします
+3. リストから「{0}」を選択します</value></data>
+  <data name="Detail_Streaming"><value>最初の映像を待っています…</value></data>
+  <data name="Detail_Streaming_With"><value>「{0}」に接続済み</value></data>
+  <data name="Button_Start"><value>AirPlay を開始</value></data>
+  <data name="Button_Stop"><value>AirPlay を停止</value></data>
+  <data name="Tooltip_Fullscreen"><value>全画面表示（Alt+Enter）</value></data>
+  <data name="Tooltip_More"><value>その他</value></data>
+  <data name="Menu_Settings"><value>設定…</value></data>
+  <data name="Menu_Coffee"><value>開発者にコーヒーをおごる</value></data>
+  <data name="Menu_About"><value>Spieglein について</value></data>
+  <data name="Tray_Show"><value>ウィンドウを表示</value></data>
+  <data name="Tray_Quit"><value>終了</value></data>
+  <data name="Settings_Title"><value>設定</value></data>
+  <data name="Settings_Save"><value>保存</value></data>
+  <data name="Settings_Cancel"><value>キャンセル</value></data>
+  <data name="Settings_DeviceName"><value>デバイス名</value></data>
+  <data name="Settings_DeviceName_Placeholder"><value>iPhone に表示される名前</value></data>
+  <data name="Settings_AudioOnly"><value>オーディオのみ（映像ウィンドウなし）</value></data>
+  <data name="Settings_AudioOnly_On"><value>オン</value></data>
+  <data name="Settings_AudioOnly_Off"><value>オフ</value></data>
+  <data name="Settings_Pin"><value>PIN コード（4 桁、空欄でオフ）</value></data>
+  <data name="Settings_Pin_Placeholder"><value>例：1234</value></data>
+  <data name="Settings_Language"><value>言語</value></data>
+  <data name="Settings_Language_Auto"><value>自動（システム設定）</value></data>
+  <data name="Settings_Language_Hint"><value>言語の変更はアプリの再起動後に反映されます。</value></data>
+  <data name="Settings_Discovery_Hint"><value>注意：名前を変更してから iPhone に新しい名前が表示されるまで、1～2 分かかることがあります（iOS がデバイス一覧をキャッシュするため）。</value></data>
+  <data name="Restart_Question"><value>言語の変更はアプリの再起動後に反映されます。今すぐ再起動しますか？</value></data>
+  <data name="Restart_Yes"><value>再起動</value></data>
+  <data name="Restart_No"><value>後で</value></data>
+  <data name="About_Body"><value>Spieglein は、iPhone、iPad、Mac の画面を Windows にミラーリングできる無料の AirPlay レシーバーです。（ドイツ語で「小さな鏡」を意味し、グリム童話『白雪姫』の「鏡よ鏡、壁の鏡…」にちなんでいます。）
+UxPlay（GPLv3）と Apple のオープンソース mDNSResponder（Apache-2.0）を利用しています。
+
+本アプリは Apple Inc. とは関係ありません。AirPlay は Apple Inc. の商標です。</value></data>
+  <data name="About_SourceLabel"><value>ソースコード：</value></data>
+  <data name="About_VersionLabel"><value>バージョン</value></data>
+  <data name="About_Ok"><value>OK</value></data>
+  <data name="Status_Starting"><value>起動中…</value></data>
+  <data name="Detail_Starting"><value>AirPlay の受信を準備しています…</value></data>
+  <data name="Error_DiscoveryBlocked"><value>Windows がデバイスの検出をブロックしているため、iPhone から Spieglein を検出できません。
+
+1. Windows の設定で「ネットワークとインターネット」を開き、このネットワークを「プライベート」に設定してください。
+2. Windows ファイアウォールで Spieglein を許可してください。</value></data>
+  <data name="Error_NameConflict"><value>名前「{0}」はこのネットワークで既に使用されています。設定でデバイス名を変更してください。</value></data>
+  <data name="Error_PortBusy"><value>必要なネットワークポートが使用中です。以前の Spieglein のセッションがバックグラウンドに残っていることがほとんどです。サインアウトして再度サインインするか、PC を再起動してください。</value></data>
+  <data name="Warn_NetworkDropped"><value>デバイスとの接続が切断されました。Wi-Fi の接続状況をご確認ください。Spieglein は新しい接続を待機しています。</value></data>
+  <data name="Warn_NoVideoOutput"><value>接続されていますが、映像が届いていません。
+
+多くの場合、映像または音声が正しく出力されていないことが原因です。仮想マシンやリモートデスクトップでの利用、オーディオデバイスが無効になっている場合などが該当します。グラフィックドライバーとオーディオ出力をご確認ください。</value></data>
+  <data name="Warn_NoAudioDevice"><value>この PC にはオーディオ出力がないため、音声なしで受信します。映像には影響はありません。</value></data>
+
+</root>

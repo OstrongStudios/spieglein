@@ -6,6 +6,11 @@
 # Fenster auf feste Groesse -> abfotografieren -> "AirPlay starten" per
 # UI-Automation klicken -> erneut abfotografieren -> App schliessen.
 
+param(
+  # Nur diese Sprachen aufnehmen, z. B. -Only ja-JP. Leer = alle.
+  [string[]] $Only = @()
+)
+
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
 Add-Type -AssemblyName UIAutomationClient
@@ -39,6 +44,7 @@ $langs = [ordered]@{
   'en-US'   = 'Start AirPlay'
   'es-ES'   = 'Activar AirPlay'
   'fr-FR'   = 'Activer AirPlay'
+  'ja-JP'   = "AirPlay $([char]0x3092)$([char]0x958B)$([char]0x59CB)"   # AirPlay を開始
   'pt-BR'   = 'Ativar AirPlay'
   'zh-Hans' = "$([char]0x542F)$([char]0x52A8) AirPlay"   # 启动 AirPlay
 }
@@ -77,7 +83,10 @@ function Click-ByName([IntPtr]$hwnd, [string]$name) {
   return $true
 }
 
-foreach ($code in $langs.Keys) {
+$codes = if ($Only.Count) { $langs.Keys | Where-Object { $Only -contains $_ } } else { $langs.Keys }
+if (-not $codes) { throw "Keine passende Sprache in -Only: $($Only -join ', ')" }
+
+foreach ($code in $codes) {
   $btn = $langs[$code]
   Write-Host ">>> $code" -ForegroundColor Cyan
   Stop-All

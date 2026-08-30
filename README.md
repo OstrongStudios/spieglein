@@ -20,7 +20,7 @@
 - **Läuft auch ohne Audioausgabe** — dann eben ohne Ton, das Bild kommt trotzdem
 - **Auch auf älterer Grafik** — fester D3D11-Videosink statt `autovideosink`, damit Intel-Grafik ohne D3D12 (vor Haswell) mitspielt
 - **Verständliche Fehlermeldungen** statt stiller Ausfälle
-- **Mehrsprachig** — Deutsch, Englisch, Spanisch, Französisch, Portugiesisch, Chinesisch (vereinfacht)
+- **Mehrsprachig** — Deutsch, Englisch, Spanisch, Französisch, Portugiesisch, Chinesisch (vereinfacht), Japanisch
 - **Lokal-only** — keine Cloud, kein Tracking, keine Telemetrie
 
 ## Systemvoraussetzungen
