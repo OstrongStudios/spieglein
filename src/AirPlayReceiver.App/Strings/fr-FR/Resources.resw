@@ -46,6 +46,16 @@
   <data name="Settings_Language"><value>Langue</value></data>
   <data name="Settings_Language_Auto"><value>Automatique (système)</value></data>
   <data name="Settings_Language_Hint"><value>Le changement de langue prend effet au redémarrage de l’application.</value></data>
+  <data name="Settings_ColorScheme"><value>Couleur d’accentuation</value></data>
+  <data name="Color_Violet"><value>Violet</value></data>
+  <data name="Color_Teal"><value>Turquoise</value></data>
+  <data name="Color_Blue"><value>Bleu</value></data>
+  <data name="Color_Green"><value>Vert</value></data>
+  <data name="Color_Brick"><value>Orange</value></data>
+  <data name="Settings_TextSize"><value>Taille du texte</value></data>
+  <data name="Size_Standard"><value>Standard</value></data>
+  <data name="Size_Large"><value>Grande</value></data>
+  <data name="Size_ExtraLarge"><value>Très grande</value></data>
   <data name="Settings_Discovery_Hint"><value>Remarque : après un changement de nom, votre iPhone peut mettre 1 à 2 minutes à l’afficher, car iOS met la liste des appareils en cache.</value></data>
 
   <data name="Restart_Question"><value>Le changement de langue prend effet au redémarrage de l’application. Redémarrer maintenant ?</value></data>
@@ -65,9 +75,9 @@
 
 1. Ouvrez les Paramètres Windows, allez dans « Réseau et Internet » et définissez ce réseau comme « Privé ».
 2. Autorisez Spieglein dans le Pare-feu Windows.</value></data>
-  <data name="Error_NameConflict"><value>Le nom « {0} » est déjà utilisé sur ce réseau. Modifiez le nom de l'appareil dans les Réglages.</value></data>
+  <data name="Error_NameConflict"><value>Le nom « {0} » est déjà utilisé sur ce réseau. Modifiez le nom de l’appareil dans les Réglages.</value></data>
   <data name="Error_PortBusy"><value>Un port réseau nécessaire est occupé. Le plus souvent, une ancienne session Spieglein tourne encore en arrière-plan : déconnectez-vous puis reconnectez-vous, ou redémarrez le PC.</value></data>
-  <data name="Warn_NetworkDropped"><value>Connexion à l'appareil perdue (problème Wi-Fi ?). Spieglein attend une nouvelle connexion.</value></data>
+  <data name="Warn_NetworkDropped"><value>Connexion à l’appareil perdue (problème Wi-Fi ?). Spieglein attend une nouvelle connexion.</value></data>
 
   <data name="Warn_NoVideoOutput"><value>La connexion est établie, mais aucune image n’arrive.
 

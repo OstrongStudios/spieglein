@@ -40,6 +40,16 @@
   <data name="Settings_Language"><value>言語</value></data>
   <data name="Settings_Language_Auto"><value>自動（システム設定）</value></data>
   <data name="Settings_Language_Hint"><value>言語の変更はアプリの再起動後に反映されます。</value></data>
+  <data name="Settings_ColorScheme"><value>アクセントカラー</value></data>
+  <data name="Color_Violet"><value>パープル</value></data>
+  <data name="Color_Teal"><value>ターコイズ</value></data>
+  <data name="Color_Blue"><value>ブルー</value></data>
+  <data name="Color_Green"><value>グリーン</value></data>
+  <data name="Color_Brick"><value>オレンジ</value></data>
+  <data name="Settings_TextSize"><value>テキストサイズ</value></data>
+  <data name="Size_Standard"><value>標準</value></data>
+  <data name="Size_Large"><value>大</value></data>
+  <data name="Size_ExtraLarge"><value>特大</value></data>
   <data name="Settings_Discovery_Hint"><value>注意：名前を変更してから iPhone に新しい名前が表示されるまで、1～2 分かかることがあります（iOS がデバイス一覧をキャッシュするため）。</value></data>
   <data name="Restart_Question"><value>言語の変更はアプリの再起動後に反映されます。今すぐ再起動しますか？</value></data>
   <data name="Restart_Yes"><value>再起動</value></data>

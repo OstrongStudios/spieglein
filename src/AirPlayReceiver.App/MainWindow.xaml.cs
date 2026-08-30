@@ -56,6 +56,14 @@ public sealed partial class MainWindow : Window
         var windowId = Win32Interop.GetWindowIdFromWindow(appHwnd);
         _appWindow = AppWindow.GetFromWindowId(windowId);
 
+        ApplyColorScheme();
+        ApplyTextSize();
+
+        // Wechselt Windows waehrend des Betriebs zwischen hell und dunkel,
+        // muessen Akzent, Leiste und Titelleiste neu gesetzt werden.
+        if (Content is FrameworkElement root)
+            root.ActualThemeChanged += (_, _) => ApplyColorScheme();
+
         // Spieglein-Icon in der Titelleiste setzen (Win32-Fensterklassen-Icon).
         // Auf manchen Win10-Builds (22H2 + alter Hardware) kann SetIcon zicken — daher
         // weich umschliessen, im Worst-Case bleibt halt das Default-Icon.
@@ -173,17 +181,21 @@ public sealed partial class MainWindow : Window
     private async void MenuSettings_Click(object sender, RoutedEventArgs e)
     {
         var oldLang = _settings.Language;
-        var dlg = new SettingsDialog(this.Content.XamlRoot, _settings, _strings);
+        var dlg = new SettingsDialog(this.Content.XamlRoot, _settings, _strings, IsDarkTheme);
         await ShowDialogSafelyAsync(dlg);
         if (!dlg.SaveRequested) return;
 
+        // dlg.Result ist eine Kopie der uebergebenen Einstellungen mit den vier
+        // Feldern des Dialogs darueber — alles andere steht unveraendert darin.
+        // previous zeigt weiter auf das alte Objekt, der Vergleich unten traegt.
         var previous = _settings;
         _settings = dlg.Result;
-        // Der Dialog baut ein frisches AppSettings nur aus seinen vier Feldern.
-        // Ohne diese Zeile loescht jedes Speichern die "Letzte Verbindung".
-        _settings.LastConnectedDevice = previous.LastConnectedDevice;
         _settings.Save();
         _controller.Settings = _settings;
+
+        // Farbschema und Schriftgroesse greifen sofort, ohne Neustart.
+        ApplyColorScheme();
+        ApplyTextSize();
 
         // Nur neu starten, wenn sich etwas geaendert hat, das in die uxplay-
         // Kommandozeile eingeht — ein Sprachwechsel allein braucht keinen Neustart.
@@ -519,4 +531,76 @@ public sealed partial class MainWindow : Window
     }
 
     private static SolidColorBrush Brush(Windows.UI.Color color) => new(color);
+
+    /// <summary>
+    /// Faerbt die Titelleiste passend zur Toolbar darunter.
+    ///
+    /// WinUI 3 laesst die Titelleiste sonst im hellen Systemton stehen, auch wenn
+    /// Windows auf Dunkel steht und die ganze App darunter dunkel ist. Das faellt
+    /// auf jedem Screenshot auf: heller Balken ueber dunkler Oberflaeche.
+    /// AppWindowTitleBar gibt es ab Windows 10 1809; auf aelteren Systemen ist
+    /// IsCustomizationSupported false, dann bleibt es beim Systemton.
+    /// </summary>
+    private void ApplyTitleBarColors()
+    {
+        try
+        {
+            if (!AppWindowTitleBar.IsCustomizationSupported()) return;
+
+            var dunkel  = IsDarkTheme;
+            var grund   = ColorSchemes.BarColor(_settings.ColorScheme, dunkel);
+            var schrift = dunkel ? Colors.White : Colors.Black;
+
+            var tb = _appWindow.TitleBar;
+            tb.BackgroundColor               = grund;
+            tb.InactiveBackgroundColor       = grund;
+            tb.ForegroundColor               = schrift;
+            tb.InactiveForegroundColor       = dunkel ? Colors.Gray : Colors.DimGray;
+            tb.ButtonBackgroundColor         = grund;
+            tb.ButtonInactiveBackgroundColor = grund;
+            tb.ButtonForegroundColor         = schrift;
+            // Hover einen Schritt heller bzw. dunkler als die Leiste, damit die
+            // Fensterknoepfe reagieren, ohne aus dem Schema zu fallen.
+            tb.ButtonHoverBackgroundColor    = dunkel ? Aufhellen(grund, 0.14) : Abdunkeln(grund, 0.08);
+            tb.ButtonHoverForegroundColor    = schrift;
+        }
+        catch
+        {
+            // Faerben ist Kosmetik - schlaegt es fehl, bleibt der Systemton.
+        }
+    }
+
+    /// <summary>Dunkler Modus? Windows-Einstellung, die App gibt kein Theme vor.</summary>
+    private bool IsDarkTheme => (Content as FrameworkElement)?.ActualTheme != ElementTheme.Light;
+
+    /// <summary>Setzt Akzentfarbe, Statusleiste und Titelleiste auf das gewaehlte Schema.</summary>
+    private void ApplyColorScheme()
+    {
+        ColorSchemes.Apply(_settings.ColorScheme, IsDarkTheme);
+        ApplyTitleBarColors();
+    }
+
+    private static Windows.UI.Color Aufhellen(Windows.UI.Color c, double t) => ColorHelper.FromArgb(
+        255, (byte)(c.R + (255 - c.R) * t), (byte)(c.G + (255 - c.G) * t), (byte)(c.B + (255 - c.B) * t));
+
+    private static Windows.UI.Color Abdunkeln(Windows.UI.Color c, double t) => ColorHelper.FromArgb(
+        255, (byte)(c.R * (1 - t)), (byte)(c.G * (1 - t)), (byte)(c.B * (1 - t)));
+
+    /// <summary>
+    /// Setzt Schriftgroessen, Statuspunkt und die zwei Breiten auf die gewaehlte
+    /// Stufe. Die Breiten muessen mit: waechst die Schrift und die MaxWidth des
+    /// Hinweistexts nicht, bricht die Verbindungsanleitung mitten im Satz um.
+    /// </summary>
+    private void ApplyTextSize()
+    {
+        var g = TextSizes.Resolve(_settings.TextSize);
+
+        StatusText.FontSize       = g.Status;
+        DetailText.FontSize       = g.Hint;
+        ToggleButtonText.FontSize = g.Button;
+        StatusIndicator.Width     = g.Dot;
+        StatusIndicator.Height    = g.Dot;
+        ToggleButton.MinWidth     = g.ButtonMinWidth;
+        IdleHint.MaxWidth         = g.HintMaxWidth;
+    }
 }

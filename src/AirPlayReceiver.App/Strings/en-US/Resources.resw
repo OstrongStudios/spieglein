@@ -46,6 +46,16 @@
   <data name="Settings_Language"><value>Language</value></data>
   <data name="Settings_Language_Auto"><value>Automatic (system)</value></data>
   <data name="Settings_Language_Hint"><value>Language changes take effect after restarting the app.</value></data>
+  <data name="Settings_ColorScheme"><value>Accent color</value></data>
+  <data name="Color_Violet"><value>Violet</value></data>
+  <data name="Color_Teal"><value>Teal</value></data>
+  <data name="Color_Blue"><value>Blue</value></data>
+  <data name="Color_Green"><value>Green</value></data>
+  <data name="Color_Brick"><value>Orange</value></data>
+  <data name="Settings_TextSize"><value>Text size</value></data>
+  <data name="Size_Standard"><value>Standard</value></data>
+  <data name="Size_Large"><value>Large</value></data>
+  <data name="Size_ExtraLarge"><value>Extra large</value></data>
   <data name="Settings_Discovery_Hint"><value>Note: After renaming, it can take 1–2 minutes until your iPhone shows the new name (iOS caches the device list).</value></data>
 
   <data name="Restart_Question"><value>The language change takes effect after restarting the app. Restart now?</value></data>

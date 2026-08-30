@@ -22,7 +22,7 @@
 
         <!-- Toolbar -->
         <Grid x:Name="Toolbar" Grid.Row="0" Padding="20,14"
-              Background="{ThemeResource LayerFillColorDefaultBrush}"
+              Background="{ThemeResource AppToolbarBackgroundBrush}"
               BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
               BorderThickness="0,0,0,1">
             <Grid.ColumnDefinitions>
@@ -35,10 +35,10 @@
             </Grid.ColumnDefinitions>
 
             <Ellipse x:Name="StatusIndicator" Grid.Column="0"
-                     Width="18" Height="18" Fill="Gray"
+                     Width="20" Height="20" Fill="Gray"
                      VerticalAlignment="Center"/>
             <TextBlock x:Name="StatusText" Grid.Column="1"
-                       Margin="12,0,0,0" FontSize="16" FontWeight="SemiBold"
+                       Margin="12,0,0,0" FontSize="18" FontWeight="SemiBold"
                        VerticalAlignment="Center"/>
 
             <Button x:Name="FullscreenButton" Grid.Column="3"
@@ -74,8 +74,8 @@
 
             <Button x:Name="ToggleButton" Grid.Column="5"
                     Click="ToggleButton_Click"
-                    Style="{ThemeResource AccentButtonStyle}" MinWidth="170">
-                <TextBlock x:Name="ToggleButtonText" FontSize="14"/>
+                    Style="{ThemeResource AccentButtonStyle}" MinWidth="180">
+                <TextBlock x:Name="ToggleButtonText" FontSize="15"/>
             </Button>
         </Grid>
 
@@ -84,8 +84,8 @@
               SizeChanged="VideoHost_SizeChanged">
             <StackPanel x:Name="IdleHint"
                         HorizontalAlignment="Center" VerticalAlignment="Center"
-                        Spacing="10" MaxWidth="420">
-                <TextBlock x:Name="DetailText" FontSize="14"
+                        Spacing="10" MaxWidth="580">
+                <TextBlock x:Name="DetailText" FontSize="15"
                            Foreground="#AAAAAA"
                            HorizontalAlignment="Center"
                            HorizontalTextAlignment="Center"

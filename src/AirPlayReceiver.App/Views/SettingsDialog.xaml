@@ -5,10 +5,97 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     DefaultButton="Primary"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick">
+
+    <ContentDialog.Resources>
+        <!-- Farbflaeche als Optionsfeld.
+
+             Die Standarddarstellung eines RadioButton setzt seinen eigenen Ring
+             NEBEN den Inhalt — man saehe fuenf leere Kreise und daneben fuenf
+             Farbpunkte. Diese Vorlage zeigt nur den Farbpunkt und legt den
+             Auswahlring darum.
+
+             Getauscht wird ausschliesslich das Aussehen. Rolle, Auswahlzustand
+             und Position ("1 von 5") kommen weiterhin vom Steuerelement und
+             werden von der Sprachausgabe lokalisiert vorgelesen. -->
+        <Style x:Key="FarbflaecheStyle" TargetType="RadioButton">
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0,0,6,0"/>
+            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Grid Width="38" Height="38" Background="Transparent">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="PointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Target="Ring.Opacity" Value="0.45"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <VisualState.Setters>
+                                            <Setter Target="Punkt.Opacity" Value="0.7"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <VisualState.Setters>
+                                            <Setter Target="Punkt.Opacity" Value="0.4"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="CheckStates">
+                                    <VisualState x:Name="Unchecked"/>
+                                    <VisualState x:Name="Indeterminate"/>
+                                    <VisualState x:Name="Checked">
+                                        <VisualState.Setters>
+                                            <Setter Target="Ring.Opacity" Value="1"/>
+                                            <Setter Target="Ring.StrokeThickness" Value="2"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+
+                            <Ellipse x:Name="Ring" Width="36" Height="36" Opacity="0"
+                                     StrokeThickness="1.5"
+                                     Stroke="{ThemeResource TextFillColorPrimaryBrush}"/>
+                            <ContentPresenter x:Name="Punkt"
+                                              Content="{TemplateBinding Content}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </ContentDialog.Resources>
+
     <StackPanel Spacing="16" MinWidth="380">
         <TextBox x:Name="DeviceNameBox"/>
         <ToggleSwitch x:Name="AudioOnlySwitch"/>
         <TextBox x:Name="PinBox" MaxLength="4"/>
+
+        <!-- Farbschema: eine Reihe Farbflaechen statt einer Auswahlliste.
+             Eine Farbe waehlt man, indem man sie sieht, nicht indem man ihren
+             Namen liest. Der Name steckt trotzdem drin, als Tooltip und als
+             AutomationProperties.Name.
+
+             BEWUSST RadioButtons und keine Reihe aus Button: Nur so meldet
+             Windows der Sprachausgabe von sich aus "Violett, Optionsfeld,
+             ausgewaehlt, 1 von 5" — lokalisiert, in allen sieben Sprachen, ohne
+             einen weiteren Ressourcenschluessel. Eine fruehere Fassung baute den
+             Auswahlzustand von Hand als Hilfetext "1" bzw. "0"; vorgelesen wurde
+             daraus "Violett, eins". Header uebernimmt zugleich die Gruppen-
+             beschriftung, die einer nackten StackPanel-Reihe fehlt.
+
+             Die Eintraege baut das Code-Behind aus ColorSchemes.All, damit ein
+             weiteres Schema keine XAML-Aenderung braucht. -->
+        <RadioButtons x:Name="ColorSchemeRow" MaxColumns="5"/>
+
+        <ComboBox x:Name="TextSizeCombo" HorizontalAlignment="Stretch"/>
+
         <!-- Eintraege werden im Code-Behind aus den vorhandenen Strings/<locale>/-
              Ordnern befuellt, damit neue Sprachen ohne XAML-Aenderung auftauchen. -->
         <ComboBox x:Name="LanguageCombo" HorizontalAlignment="Stretch"/>

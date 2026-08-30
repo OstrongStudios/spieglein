@@ -46,6 +46,16 @@
   <data name="Settings_Language"><value>语言</value></data>
   <data name="Settings_Language_Auto"><value>自动（跟随系统）</value></data>
   <data name="Settings_Language_Hint"><value>语言更改将在重新启动应用后生效。</value></data>
+  <data name="Settings_ColorScheme"><value>主题色</value></data>
+  <data name="Color_Violet"><value>紫色</value></data>
+  <data name="Color_Teal"><value>蓝绿色</value></data>
+  <data name="Color_Blue"><value>蓝色</value></data>
+  <data name="Color_Green"><value>绿色</value></data>
+  <data name="Color_Brick"><value>橙色</value></data>
+  <data name="Settings_TextSize"><value>文本大小</value></data>
+  <data name="Size_Standard"><value>标准</value></data>
+  <data name="Size_Large"><value>大</value></data>
+  <data name="Size_ExtraLarge"><value>特大</value></data>
   <data name="Settings_Discovery_Hint"><value>提示：更改名称后，iPhone 可能需要 1–2 分钟才会显示新名称，因为 iOS 会缓存设备列表。</value></data>
 
   <data name="Restart_Question"><value>语言更改将在重新启动应用后生效。现在重新启动吗？</value></data>

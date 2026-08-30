@@ -7,6 +7,48 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+
+                <!-- Eigene Farben statt der Windows-Akzentfarbe.
+
+                     Ohne diese Ueberschreibung nimmt AccentButtonStyle die Farbe, die
+                     der Nutzer in den Windows-Einstellungen gewaehlt hat. Das ist die
+                     Windows-Konvention, hat hier aber einen Haken: der Statuspunkt in
+                     der Statusleiste ist gruen bei "Bereit" und blau bei "Aktive
+                     Verbindung". Steht daneben ein gruener oder blauer Knopf, verliert
+                     der Punkt seine Signalwirkung. Deshalb ist Violett die Vorgabe.
+
+                     Die Werte hier sind nur der Startwert (Violett, dunkel). Welches
+                     Schema wirklich gilt, setzt ColorSchemes.Apply beim Start und bei
+                     jeder Aenderung in den Einstellungen — durch Umfaerben genau
+                     dieser Brush-Instanzen. Deshalb stehen hier bewusst KEINE
+                     ThemeDictionaries: ob hell oder dunkel gilt, entscheidet der Code,
+                     sonst waere die Farbtabelle an zwei Stellen zu pflegen.
+
+                     DREI FALLEN beim Ueberschreiben, alle einzeln hineingetappt und
+                     alle lautlos — kein Fehler, keine Warnung, der Knopf bleibt blau:
+
+                     1. Es reicht NICHT, AccentFillColorDefaultBrush zu ueberschreiben.
+                        AccentButtonStyle liest AccentButtonBackground, und das ist in
+                        generic.xaml (Zeile 8801 ff.) schon aufgeloest — die Kette
+                        bricht dort.
+
+                     2. Das dunkle Themenwoerterbuch heisst in WinUI "Default", NICHT
+                        "Dark". Hier nicht mehr relevant, weil ohne ThemeDictionaries,
+                        aber es kostet sonst eine halbe Stunde Suche.
+
+                     3. Dieses Woerterbuch muss ein eigener Eintrag in
+                        MergedDictionaries sein und HINTER XamlControlsResources
+                        stehen. Zusammengefuehrte Woerterbuecher werden von hinten
+                        nach vorne durchsucht, das letzte gewinnt. Direkt in der
+                        aeusseren ResourceDictionary greift es nicht. -->
+                <ResourceDictionary>
+                    <SolidColorBrush x:Key="AccentButtonBackground"             Color="#B39BDB"/>
+                    <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver"  Color="#B39BDB"/>
+                    <SolidColorBrush x:Key="AccentButtonBackgroundPressed"      Color="#B39BDB"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrush"            Color="#C4B0E4"/>
+                    <SolidColorBrush x:Key="AccentButtonBorderBrushPointerOver" Color="#C4B0E4"/>
+                    <SolidColorBrush x:Key="AppToolbarBackgroundBrush"          Color="#2A2340"/>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

@@ -46,6 +46,16 @@
   <data name="Settings_Language"><value>Idioma</value></data>
   <data name="Settings_Language_Auto"><value>Automático (sistema)</value></data>
   <data name="Settings_Language_Hint"><value>El cambio de idioma se aplica al reiniciar la aplicación.</value></data>
+  <data name="Settings_ColorScheme"><value>Color de énfasis</value></data>
+  <data name="Color_Violet"><value>Violeta</value></data>
+  <data name="Color_Teal"><value>Turquesa</value></data>
+  <data name="Color_Blue"><value>Azul</value></data>
+  <data name="Color_Green"><value>Verde</value></data>
+  <data name="Color_Brick"><value>Naranja</value></data>
+  <data name="Settings_TextSize"><value>Tamaño del texto</value></data>
+  <data name="Size_Standard"><value>Estándar</value></data>
+  <data name="Size_Large"><value>Grande</value></data>
+  <data name="Size_ExtraLarge"><value>Muy grande</value></data>
   <data name="Settings_Discovery_Hint"><value>Nota: tras cambiar el nombre, tu iPhone puede tardar entre 1 y 2 minutos en mostrarlo, ya que iOS guarda la lista de dispositivos en caché.</value></data>
 
   <data name="Restart_Question"><value>El cambio de idioma se aplica al reiniciar la aplicación. ¿Reiniciar ahora?</value></data>
